@@ -15,8 +15,7 @@ typedef enum // Status codes
 
 typedef struct
 {
-  S32 s32Data;
-  char StringData[MAX_STR_SIZE];
+  void *data;
 } DS_DATA;
 
 #endif
