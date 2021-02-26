@@ -2,8 +2,6 @@
 
 int main()
 {
-    Seed_Example_Ids();
-
     char str[MAX_STR_SIZE];
 
     DS_ReadString(BRAKE_PEDAL, str, sizeof(str));
