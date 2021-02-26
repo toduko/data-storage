@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-void *rand_string(char *str, int size)
+void *generate_random_string(char *str, int size)
 {
   srand(time(NULL) * size);
   const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

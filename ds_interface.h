@@ -1,5 +1,4 @@
 #include "types.h"
-#include "helpers.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -9,23 +8,12 @@ DS_Data DS_GENERATED_DATA[DATA_SIZE];
 DS_ID DS_GENERATED_IDs[DATA_SIZE];
 
 // seeding data
-void Generate_Example_Data()
-{
-  for (int i = 0; i < DATA_SIZE; ++i)
-  {
-    DS_GENERATED_DATA[i].s32Data = i * 10;
-    char str[i + 1];
-    rand_string(str, 4);
-    DS_GENERATED_DATA[i].StringData = str;
-  }
-}
-
 void Generate_Example_Ids()
 {
   for (int i = 0; i < DATA_SIZE; ++i)
   {
-    DS_GENERATED_IDs[i].id = i;
-    sprintf(DS_GENERATED_IDs[i].code, "%d", i);
+    DS_GENERATED_IDs[i].id = i; // id will be the same as index
+    sprintf(DS_GENERATED_IDs[i].code, "%d", i); // code will by the same as index
   }
 }
 
@@ -75,7 +63,7 @@ DSError DS_WriteString(DSID id, char *string)
   {
     if (id == DS_GENERATED_IDs[i].id)
     {
-      snprintf(DS_GENERATED_DATA[i].StringData, sizeof(string), "%s", string);
+      DS_GENERATED_DATA[i].StringData = string;
       return SUCCESS;
     }
   }
