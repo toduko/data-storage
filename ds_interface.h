@@ -5,7 +5,7 @@
 #include "types.h"
 #include <stdio.h>
 
-void Seed_Data();
+DSError Set_Location(DSID id, void *location);
 
 void Log_Result(const char *func, DSError status);
 

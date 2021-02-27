@@ -6,16 +6,16 @@
 
 DS_DATA DS_GENERATED_DATA[DATA_SIZE];
 
-void Seed_Data()
+DSError Set_Location(DSID id, void *location)
 {
-  for (int i = 0; i < DATA_SIZE; ++i)
+  if (id >= DATA_SIZE)
   {
-    if (i % 2 == 1)
-    {
-      S32 intData;
-      DS_GENERATED_DATA[i].data = &intData;
-    }
+    Log_Result(__func__, OUT_OF_BOUNDS);
+    return OUT_OF_BOUNDS;
   }
+  DS_GENERATED_DATA[id].data = location;
+  Log_Result(__func__, SUCCESS);
+  return SUCCESS;
 }
 
 void Log_Result(const char *func, DSError status)
