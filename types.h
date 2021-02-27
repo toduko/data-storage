@@ -11,6 +11,7 @@ typedef enum // Status codes
 {
   SUCCESS,
   OUT_OF_BOUNDS,
+  POINTER_ERROR
 } DSError;
 
 typedef struct

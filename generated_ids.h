@@ -3,10 +3,11 @@
 
 typedef enum
 {
-  BRAKE_PEDAL,
-  CLUTCH,
-  GEAR_BOX,
-  DATA_SIZE
+    BRAKE_PEDAL,
+    CLUTCH,
+    GEAR_BOX,
+    ENGINE,
+    DATA_SIZE
 } DSID;
 
 #endif
