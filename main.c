@@ -21,9 +21,8 @@ int main()
   DS_ReadInt(CLUTCH, &s32Data);
   printf("CLUTCH data after: %d\n", s32Data);
 
-  DS_WriteInt(ENGINE, 20);
-  DS_ReadInt(ENGINE, &s32Data);
-  printf("ENGINE data: %d\n", s32Data);
+  DS_ReadInt(GEAR_BOX, &s32Data);
+  DS_ReadInt(DATA_SIZE, &s32Data);
 
   return 0;
 }

@@ -1,6 +1,7 @@
 #include "ds_interface.h"
 #include "generated_ids.h"
 #include "types.h"
+#include <string.h>
 #include <stdio.h>
 
 DS_DATA DS_GENERATED_DATA[DATA_SIZE];
@@ -19,20 +20,27 @@ void Seed_Data()
 
 void Log_Result(const char *func, DSError status)
 {
-  char *code;
+  char output[MAX_STR_SIZE * 2];
+  char *red = "\x1b[31m";
+  char *green = "\x1b[32m";
+  char *yellow = "\x1b[33m";
   switch (status)
   {
   case SUCCESS:
-    code = "SUCCESS";
+    strcpy(output, green);
+    strcat(output, "SUCCESS");
     break;
   case OUT_OF_BOUNDS:
-    code = "OUT_OF_BOUNDS";
+    strcpy(output, yellow);
+    strcat(output, "OUT_OF_BOUNDS");
     break;
   case POINTER_ERROR:
-    code = "POINTER_ERROR";
+    strcpy(output, red);
+    strcat(output, "POINTER_ERROR");
     break;
   }
-  printf("%s result: %s\n", func, code);
+  printf("%s result: %s\n", func, output);
+  printf("\x1b[0m");
 }
 
 DSError DS_ReadInt(DSID id, S32 *value)
@@ -97,6 +105,6 @@ DSError DS_WriteString(DSID id, char *string)
     return OUT_OF_BOUNDS;
   }
   DS_GENERATED_DATA[id].data = string;
-  printf("DS_WriteString result: SUCCESS\n");
+  Log_Result(__func__, SUCCESS);
   return SUCCESS;
 }
