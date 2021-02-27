@@ -1,7 +1,10 @@
 #include "ds_interface.h"
+#include <stdlib.h>
 
 int main()
 {
+  system(" ");
+
   Seed_Data();
 
   char str[MAX_STR_SIZE];
