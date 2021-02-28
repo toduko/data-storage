@@ -48,9 +48,7 @@ DSError DS_ReadInt(DSID id, S32 *value)
   }
   S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
   if (ptr)
-  {
     *value = *ptr;
-  }
   else
   {
     Log_Result(__func__, POINTER_ERROR);
@@ -67,7 +65,15 @@ DSError DS_ReadString(DSID id, char *buff, U32 BuffSize)
     Log_Result(__func__, OUT_OF_BOUNDS);
     return OUT_OF_BOUNDS;
   }
-  snprintf(buff, BuffSize, "%s", (char *)DS_GENERATED_DATA[id].data);
+  char *ptr = (char *)DS_GENERATED_DATA[id].data;
+  if (ptr)
+    snprintf(buff, BuffSize, "%s", ptr);
+  else
+  {
+    snprintf(buff, BuffSize, "%s", "");
+    Log_Result(__func__, POINTER_ERROR);
+    return POINTER_ERROR;
+  }
   Log_Result(__func__, SUCCESS);
   return SUCCESS;
 }
@@ -81,9 +87,7 @@ DSError DS_WriteInt(DSID id, S32 value)
   }
   S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
   if (ptr)
-  {
     *ptr = value;
-  }
   else
   {
     Log_Result(__func__, POINTER_ERROR);
@@ -99,6 +103,14 @@ DSError DS_WriteString(DSID id, char *string)
   {
     printf("DS_WriteString result: OUT_OF_BOUNDS\n");
     return OUT_OF_BOUNDS;
+  }
+  char *ptr = (char *)DS_GENERATED_DATA[id].data;
+  if (ptr)
+    snprintf(ptr, sizeof(*ptr), "%s", string);
+  else
+  {
+    Log_Result(__func__, POINTER_ERROR);
+    return POINTER_ERROR;
   }
   DS_GENERATED_DATA[id].data = string;
   Log_Result(__func__, SUCCESS);
