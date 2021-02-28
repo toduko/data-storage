@@ -1,8 +1,7 @@
 #ifndef DS_INTERFACE_H_
 #define DS_INTERFACE_H_
 
-#include "generated_ids.h"
-#include "types.h"
+#include "generated_data.h"
 #include <stdio.h>
 
 DSError Set_Location(DSID id, void *location);

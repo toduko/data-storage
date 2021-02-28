@@ -1,22 +1,17 @@
 #ifndef TYPES_H_
 #define TYPES_H_
 
-typedef signed int S32;   // -2147483648 to 2147483647
-typedef unsigned int U32; // 0 to 4294967295
-typedef unsigned char UC; // 0 to 255
+typedef signed int S32;
+typedef unsigned int U32;
+typedef unsigned char UC;
 
 #define MAX_STR_SIZE 256
 
-typedef enum // Status codes
+typedef enum
 {
   SUCCESS,
   OUT_OF_BOUNDS,
   POINTER_ERROR
 } DSError;
-
-typedef struct
-{
-  void *data;
-} DS_DATA;
 
 #endif

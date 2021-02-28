@@ -1,10 +1,6 @@
 #include "ds_interface.h"
-#include "generated_ids.h"
-#include "types.h"
 #include <string.h>
 #include <stdio.h>
-
-DS_DATA DS_GENERATED_DATA[DATA_SIZE];
 
 DSError Set_Location(DSID id, void *location)
 {
