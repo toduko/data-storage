@@ -4,10 +4,6 @@
 #include "generated_data.h"
 #include <stdio.h>
 
-DSError Set_Location(const DSID id, void *location);
-
-void Log_Result(const char *func, const DSError status);
-
 DSError DS_ReadInt(const DSID id, S32 *value);
 
 DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize);
