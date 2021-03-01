@@ -9,7 +9,7 @@ int main()
 
   char str[MAX_STR_SIZE];
 
-  DS_ReadString(BRAKE_PEDAL, str, sizeof(str));
+  DS_ReadString(BRAKE_PEDAL, str, sizeof(str) - 1);
   printf("BRAKE_PEDAL_Data before: %s\n", str);
 
   DS_WriteString(BRAKE_PEDAL, "BRAKE v2");
