@@ -4,17 +4,12 @@
 
 typedef enum
 {
-    BRAKE_PEDAL,
-    CLUTCH,
-    GEAR_BOX,
-    ENGINE,
-    DATA_SIZE
+  BRAKE_PEDAL,
+  CLUTCH,
+  GEAR_BOX,
+  ENGINE,
+  DATA_SIZE
 } DSID;
-
-typedef struct
-{
-  void *data;
-} DS_DATA;
 
 extern DS_DATA DS_GENERATED_DATA[DATA_SIZE];
 

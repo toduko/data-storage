@@ -15,4 +15,9 @@ typedef enum
   POINTER_ERROR
 } DSError;
 
+typedef struct
+{
+  void *data;
+} DS_DATA;
+
 #endif
