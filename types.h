@@ -1,8 +1,9 @@
 #ifndef TYPES_H_
 #define TYPES_H_
+#include <stdint.h>
 
-typedef signed int S32;
-typedef unsigned int U32;
+typedef int32_t S32;
+typedef uint32_t U32;
 typedef unsigned char UC;
 
 #define MAX_STR_SIZE 256
