@@ -1,6 +1,11 @@
 STD=c90
 OUT=main
+FILES=$(wildcard *.c)
 
-default:
-	gcc -o $(OUT) -std=$(STD) *.c
+debug:
+	gcc -o $(OUT) -std=$(STD) $(FILES)
+	./$(OUT) -d
+
+production:
+	gcc -o $(OUT) -std=$(STD) $(FILES)
 	./$(OUT)
