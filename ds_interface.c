@@ -1,8 +1,7 @@
 #include "ds_interface.h"
 #include <string.h>
-#include <stdio.h>
 
-DSError Set_Location(DSID id, void *location)
+DSError Set_Location(const DSID id, void *location)
 {
   if (id >= DATA_SIZE)
   {
@@ -14,7 +13,7 @@ DSError Set_Location(DSID id, void *location)
   return SUCCESS;
 }
 
-void Log_Result(const char *func, DSError status)
+void Log_Result(const char *func, const DSError status)
 {
   char output[MAX_STR_SIZE * 2];
   char *red = "\x1b[31m";
@@ -39,7 +38,7 @@ void Log_Result(const char *func, DSError status)
   printf("\x1b[0m");
 }
 
-DSError DS_ReadInt(DSID id, S32 *value)
+DSError DS_ReadInt(const DSID id, S32 *value)
 {
   if (id >= DATA_SIZE)
   {
@@ -48,7 +47,9 @@ DSError DS_ReadInt(DSID id, S32 *value)
   }
   S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
   if (ptr)
+  {
     *value = *ptr;
+  }
   else
   {
     Log_Result(__func__, POINTER_ERROR);
@@ -58,7 +59,7 @@ DSError DS_ReadInt(DSID id, S32 *value)
   return SUCCESS;
 }
 
-DSError DS_ReadString(DSID id, char *buff, U32 BuffSize)
+DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
 {
   if (id >= DATA_SIZE)
   {
@@ -67,7 +68,9 @@ DSError DS_ReadString(DSID id, char *buff, U32 BuffSize)
   }
   char *ptr = (char *)DS_GENERATED_DATA[id].data;
   if (ptr)
+  {
     snprintf(buff, BuffSize, "%s", ptr);
+  }
   else
   {
     snprintf(buff, BuffSize, "%s", "");
@@ -78,7 +81,7 @@ DSError DS_ReadString(DSID id, char *buff, U32 BuffSize)
   return SUCCESS;
 }
 
-DSError DS_WriteInt(DSID id, S32 value)
+DSError DS_WriteInt(const DSID id, const S32 value)
 {
   if (id >= DATA_SIZE)
   {
@@ -87,7 +90,9 @@ DSError DS_WriteInt(DSID id, S32 value)
   }
   S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
   if (ptr)
+  {
     *ptr = value;
+  }
   else
   {
     Log_Result(__func__, POINTER_ERROR);
@@ -97,7 +102,7 @@ DSError DS_WriteInt(DSID id, S32 value)
   return SUCCESS;
 }
 
-DSError DS_WriteString(DSID id, char *string)
+DSError DS_WriteString(const DSID id, char *string)
 {
   if (id >= DATA_SIZE)
   {
