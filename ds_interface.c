@@ -1,6 +1,7 @@
 #include "ds_interface.h"
 #include "utils.h"
 #include <math.h>
+#include <string.h>
 
 bool DEBUG;
 
@@ -42,11 +43,19 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     char *ptr = (char *)DS_GENERATED_DATA[id].data;
     if (ptr)
     {
-      snprintf(buff, BuffSize, "%s", ptr);
-      if (BuffSize < pow(2, sizeof(buff)))
-      {
+      U32 buff_len = strlen(buff);
 
-        status = BUFFER_TOO_SMALL;
+      if (BuffSize > buff_len)
+      {
+        status = BUFFER_TOO_BIG;
+      }
+      else
+      {
+        snprintf(buff, BuffSize, "%s", ptr);
+        if (BuffSize < buff_len)
+        {
+          status = BUFFER_TOO_SMALL;
+        }
       }
     }
     else

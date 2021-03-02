@@ -17,8 +17,9 @@ typedef enum
 {
   SUCCESS,
   OUT_OF_BOUNDS,
-  POINTER_ERROR,
   BUFFER_TOO_SMALL,
+  BUFFER_TOO_BIG,
+  POINTER_ERROR
 } DSError;
 
 typedef struct

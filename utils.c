@@ -18,6 +18,10 @@ void Log_Result(const char *name, const DSError status)
     color = YELLOW;
     result = "BUFFER_TOO_SMALL";
     break;
+   case BUFFER_TOO_BIG:
+    color = YELLOW;
+    result = "BUFFER_TOO_BIG";
+    break;
   case POINTER_ERROR:
     color = RED;
     result = "POINTER_ERROR";
