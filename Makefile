@@ -1,11 +1,12 @@
 STD=c90
-OUT=main
+OUT_DIR=bin
+OUT_FILE=main
 FILES=$(wildcard *.c)
 
 debug:
-	gcc -o $(OUT) -std=$(STD) $(FILES)
-	./$(OUT) -d
+	gcc -o $(OUT_DIR)/$(OUT_FILE) -std=$(STD) $(FILES)
+	$(OUT_DIR)/$(OUT_FILE) -d
 
 production:
-	gcc -o $(OUT) -std=$(STD) $(FILES)
-	./$(OUT)
+	gcc -o $(OUT_DIR)/$(OUT_FILE) -std=$(STD) $(FILES)
+	$(OUT_DIR)/$(OUT_FILE)
