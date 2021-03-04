@@ -18,13 +18,13 @@ int main(int argc, char *argv[])
 
   Load_Data();
 
-  char str[] = "            ";
+  char str[13];
 
-  DS_ReadString(BRAKE_PEDAL, str, strlen(str) - 1);
+  DS_ReadString(BRAKE_PEDAL, str, sizeof(str) - 5);
   printf("BRAKE_PEDAL_Data before: %s\n", str);
 
   DS_WriteString(BRAKE_PEDAL, "BRAKE v2");
-  DS_ReadString(BRAKE_PEDAL, str, strlen(str));
+  DS_ReadString(BRAKE_PEDAL, str, sizeof(str));
   printf("BRAKE_PEDAL_Data after: %s\n", str);
 
   S32 s32Data;
