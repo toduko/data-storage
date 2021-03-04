@@ -43,20 +43,19 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     char *ptr = (char *)DS_GENERATED_DATA[id].data;
     if (ptr)
     {
-      U32 buff_len = strlen(buff);
-
-      if (BuffSize > buff_len)
+      U32 data_len = strlen(ptr);
+      if (BuffSize > data_len)
       {
         status = BUFFER_TOO_BIG;
       }
       else
       {
-        snprintf(buff, BuffSize, "%s", ptr);
-        if (BuffSize < buff_len)
+        if (BuffSize < data_len)
         {
           status = BUFFER_TOO_SMALL;
         }
       }
+      snprintf(buff, BuffSize, "%s", ptr);
     }
     else
     {
@@ -104,7 +103,7 @@ DSError DS_WriteString(const DSID id, char *string)
   char *ptr = (char *)DS_GENERATED_DATA[id].data;
   if (ptr)
   {
-    snprintf(ptr, sizeof(string), "%s", string);
+    snprintf(ptr, strlen(string), "%s", string);
   }
   else
   {

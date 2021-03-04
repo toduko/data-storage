@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
 
   Load_Data();
 
-  char str[] = "        ";
+  char str[] = "            ";
 
   DS_ReadString(BRAKE_PEDAL, str, strlen(str) - 1);
   printf("BRAKE_PEDAL_Data before: %s\n", str);
