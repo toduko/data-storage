@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
   char str[13];
 
-  DS_ReadString(BRAKE_PEDAL, str, sizeof(str) - 5);
+  DS_ReadString(BRAKE_PEDAL, str, sizeof(str));
   printf("BRAKE_PEDAL_Data before: %s\n", str);
 
   DS_WriteString(BRAKE_PEDAL, "BRAKE v2");
