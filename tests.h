@@ -3,6 +3,6 @@
 
 #include "acutest.h"
 
-void test(void);
+void Test_ReadWriteInt(void);
 
 #endif
