@@ -1,8 +1,8 @@
 STD=c90
 OUT_DIR=bin
 OUT_FILE=main
-FILES=$(wildcard *.c)
-TEST_FILES=$(wildcard tests/*.c)
+FILES=$(filter-out tests.c, $(wildcard *.c))
+TEST_FILES=$(filter-out main.c, $(wildcard *.c))
 
 debug:
 	gcc -o $(OUT_DIR)/$(OUT_FILE) -std=$(STD) $(FILES)

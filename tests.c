@@ -1,4 +1,5 @@
 #include "tests.h"
+#include "ds_interface.h"
 
 void test(void)
 {
