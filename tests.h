@@ -4,5 +4,6 @@
 #include "acutest.h"
 
 void Test_ReadWriteInt(void);
+void Test_ReadWriteString(void);
 
 #endif

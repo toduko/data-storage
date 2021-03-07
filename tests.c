@@ -3,7 +3,7 @@
 
 void Test_ReadWriteInt(void)
 {
-    Load_Data();   
+    Load_Data();
 
     S32 s32Data;
     DSError status;
@@ -33,6 +33,35 @@ void Test_ReadWriteInt(void)
     TEST_MSG("Produced: %d", status);
 }
 
+void Test_ReadWriteString(void)
+{
+    Load_Data();
+    
+    char str[MAX_STR_SIZE];
+    char str_to_write[] = "BRAKE v2";
+    DSID status;
+
+    status = DS_ReadString(BRAKE_PEDAL, str, sizeof(str));
+    TEST_CHECK(status != POINTER_ERROR);
+    TEST_MSG("Expected: != %d", POINTER_ERROR);
+    TEST_MSG("Produced: %d", status);
+
+    status = DS_WriteString(BRAKE_PEDAL, str_to_write);
+    TEST_MSG("Expected: %d", SUCCESS);
+    TEST_MSG("Produced: %d", status);
+
+    status = DS_ReadString(BRAKE_PEDAL, str, sizeof(str));
+    TEST_CHECK(status != POINTER_ERROR);
+    TEST_MSG("Expected: != %d", POINTER_ERROR);
+    TEST_MSG("Produced: %d", status);
+
+    int string_comparison = strcmp(str, str_to_write) == 0;
+    TEST_CHECK(string_comparison);
+    TEST_MSG("Expected: %d", 0);
+    TEST_MSG("Produced: %d", string_comparison);
+}
+
 TEST_LIST = {
     {"Read/Write Int", Test_ReadWriteInt},
+    {"Read/Write String", Test_ReadWriteString},
     {NULL, NULL}};
