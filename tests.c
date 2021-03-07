@@ -1,5 +1,18 @@
-#include "tests.h"
 #include "ds_interface.h"
+#include "tests.h"
+
+void Test_LoadData(void)
+{
+    Load_Data();
+    DSID i;
+    for (i = 0; i < DATA_SIZE; ++i)
+    {
+        void *ptr = DS_GENERATED_DATA[i].data;
+        TEST_CHECK(ptr != NULL);
+        TEST_MSG("Expected: != %p", NULL);
+        TEST_MSG("Produced: %p", ptr);
+    }
+}
 
 void Test_ReadWriteInt(void)
 {
@@ -36,7 +49,7 @@ void Test_ReadWriteInt(void)
 void Test_ReadWriteString(void)
 {
     Load_Data();
-    
+
     char str[MAX_STR_SIZE];
     char str_to_write[] = "BRAKE v2";
     DSID status;
@@ -62,6 +75,7 @@ void Test_ReadWriteString(void)
 }
 
 TEST_LIST = {
+    {"Load Data", Test_LoadData},
     {"Read/Write Int", Test_ReadWriteInt},
     {"Read/Write String", Test_ReadWriteString},
     {NULL, NULL}};
