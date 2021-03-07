@@ -4,7 +4,8 @@
 
 typedef int32_t S32;
 typedef uint32_t U32;
-typedef unsigned char UC;
+typedef uint8_t U8;
+
 typedef enum
 {
   false,
@@ -19,11 +20,19 @@ typedef enum
   OUT_OF_BOUNDS,
   BUFFER_TOO_SMALL,
   BUFFER_TOO_BIG,
-  POINTER_ERROR
+  POINTER_ERROR,
+  TYPE_ERROR
 } DSError;
+
+enum DS_DATA_TYPES
+{
+  INT,
+  STRING
+};
 
 typedef struct
 {
+  U8 type;
   void *data;
 } DS_DATA;
 

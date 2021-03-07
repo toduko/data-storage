@@ -35,11 +35,6 @@ void Test_ReadWriteInt(void)
     TEST_MSG("Expected: %d", 321);
     TEST_MSG("Produced: %d", s32Data);
 
-    status = DS_ReadInt(ENGINE, &s32Data);
-    TEST_CHECK(status == SUCCESS);
-    TEST_MSG("Expected: %d", SUCCESS);
-    TEST_MSG("Produced: %d", status);
-
     status = DS_ReadInt(DATA_SIZE, &s32Data);
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);

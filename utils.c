@@ -2,6 +2,8 @@
 
 void Log_Result(const char *name, const DSError status)
 {
+  system(" ");
+
   char *color;
   char *result;
   switch (status)
@@ -18,13 +20,17 @@ void Log_Result(const char *name, const DSError status)
     color = YELLOW;
     result = "BUFFER_TOO_SMALL";
     break;
-   case BUFFER_TOO_BIG:
+  case BUFFER_TOO_BIG:
     color = YELLOW;
     result = "BUFFER_TOO_BIG";
     break;
   case POINTER_ERROR:
     color = RED;
     result = "POINTER_ERROR";
+    break;
+  case TYPE_ERROR:
+    color = RED;
+    result = "TYPE_ERROR";
     break;
   }
   printf("%s result: %s%s%s\n", name, color, result, RESET);

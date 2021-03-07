@@ -17,7 +17,15 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
     if (ptr)
     {
-      *value = *ptr;
+      if (DS_GENERATED_DATA[id].type != INT)
+      {
+        status = TYPE_ERROR;
+        *value = 0;
+      }
+      else
+      {
+        *value = *ptr;
+      }
     }
     else
     {
@@ -43,16 +51,24 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     char *ptr = (char *)DS_GENERATED_DATA[id].data;
     if (ptr)
     {
-      U32 data_len = strlen(ptr);
-      if (BuffSize > data_len)
+      if (DS_GENERATED_DATA[id].type != STRING)
       {
-        status = BUFFER_TOO_BIG;
+        status = TYPE_ERROR;
+        snprintf(buff, BuffSize, "%s", "");
       }
-      else if (BuffSize < data_len)
+      else
       {
-        status = BUFFER_TOO_SMALL;
+        U32 data_len = strlen(ptr);
+        if (BuffSize > data_len)
+        {
+          status = BUFFER_TOO_BIG;
+        }
+        else if (BuffSize < data_len)
+        {
+          status = BUFFER_TOO_SMALL;
+        }
+        snprintf(buff, BuffSize, "%s", ptr);
       }
-      snprintf(buff, BuffSize, "%s", ptr);
     }
     else
     {
@@ -77,7 +93,14 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
   if (ptr)
   {
-    *ptr = value;
+    if (DS_GENERATED_DATA[id].type != INT)
+    {
+      status = TYPE_ERROR;
+    }
+    else
+    {
+      *ptr = value;
+    }
   }
   else
   {
@@ -100,7 +123,14 @@ DSError DS_WriteString(const DSID id, char *string)
   char *ptr = (char *)DS_GENERATED_DATA[id].data;
   if (ptr)
   {
-    snprintf(ptr, strlen(string) + 1, "%s", string);
+    if (DS_GENERATED_DATA[id].type != STRING)
+    {
+      status = TYPE_ERROR;
+    }
+    else
+    {
+      snprintf(ptr, strlen(string) + 1, "%s", string);
+    }
   }
   else
   {
