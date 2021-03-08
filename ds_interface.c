@@ -56,11 +56,7 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
       else
       {
         U32 data_len = strlen(ptr);
-        if (BuffSize > data_len)
-        {
-          status = BUFFER_TOO_BIG;
-        }
-        else if (BuffSize < data_len)
+        if (BuffSize < data_len)
         {
           status = BUFFER_TOO_SMALL;
         }
@@ -124,7 +120,14 @@ DSError DS_WriteString(const DSID id, char *string)
     }
     else
     {
-      snprintf(ptr, strlen(string) + 1, "%s", string);
+      if (strlen(string) > strlen(ptr))
+      {
+        status = BUFFER_TOO_BIG;
+      }
+      else
+      {
+        snprintf(ptr, strlen(string) + 1, "%s", string);
+      }
     }
   }
   else
