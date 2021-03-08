@@ -11,7 +11,6 @@ typedef enum
     DATA_SIZE
 } DSID;
 
-void Load_Data();
 DS_DATA Get_Element_By_Id(DSID id);
 
 #endif

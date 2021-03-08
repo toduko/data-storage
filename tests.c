@@ -10,8 +10,6 @@ void Print_Case_Number(DSID i)
 
 void Test_LoadData(void)
 {
-    Load_Data();
-
     DSID i;
     for (i = 0; i < DATA_SIZE; ++i)
     {
@@ -27,8 +25,6 @@ void Test_LoadData(void)
 
 void Test_ReadWriteInt(void)
 {
-    Load_Data();
-
     S32 s32Data;
     DSError status;
 
@@ -80,8 +76,6 @@ void Test_ReadWriteInt(void)
 
 void Test_ReadWriteString(void)
 {
-    Load_Data();
-
     char str[MAX_STR_SIZE];
     DSID status;
 
@@ -115,10 +109,9 @@ void Test_ReadWriteString(void)
             TEST_MSG("Expected: %d", SUCCESS);
             TEST_MSG("Produced: %d", status);
 
-            int string_comparison = strcmp(str, str_to_write) == 0;
-            TEST_CHECK(string_comparison);
-            TEST_MSG("Expected: %d", 0);
-            TEST_MSG("Produced: %d", string_comparison);
+            TEST_CHECK(strcmp(str, str_to_write) == 0);
+            TEST_MSG("Expected: %s", str_to_write);
+            TEST_MSG("Produced: %s", str);
         }
         else
         {

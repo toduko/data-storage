@@ -4,8 +4,6 @@
 
 int main(int argc, char *argv[])
 {
-  Load_Data();
-
   while (1)
   {
     /*Main loop where data is interacted with*/
