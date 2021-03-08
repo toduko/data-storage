@@ -4,6 +4,9 @@
 
 int main(int argc, char *argv[])
 {
+#ifdef DEBUG
+  printf("DEBUG ENABLED\n");
+#endif
   while (1)
   {
     /*Main loop where data is interacted with*/
