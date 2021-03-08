@@ -28,3 +28,8 @@ void Load_Data()
     printf("Finished loading data\n");
 #endif
 }
+
+DS_DATA Get_Element_By_Id(DSID id)
+{
+    return DS_GENERATED_DATA[id];
+}

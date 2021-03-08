@@ -11,8 +11,7 @@ typedef enum
     DATA_SIZE
 } DSID;
 
-extern DS_DATA DS_GENERATED_DATA[DATA_SIZE];
-
 void Load_Data();
+DS_DATA Get_Element_By_Id(DSID id);
 
 #endif

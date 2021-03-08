@@ -12,10 +12,11 @@ DSError DS_ReadInt(const DSID id, S32 *value)
   }
   else
   {
-    S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
+    DS_DATA element = Get_Element_By_Id(id);
+    S32 *ptr = (S32 *)element.data;
     if (ptr)
     {
-      if (DS_GENERATED_DATA[id].type != INT)
+      if (element.type != INT)
       {
         status = TYPE_ERROR;
         *value = 0;
@@ -45,10 +46,11 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
   }
   else
   {
-    char *ptr = (char *)DS_GENERATED_DATA[id].data;
+    DS_DATA element = Get_Element_By_Id(id);
+    char *ptr = (char *)element.data;
     if (ptr)
     {
-      if (DS_GENERATED_DATA[id].type != STRING)
+      if (element.type != STRING)
       {
         status = TYPE_ERROR;
         snprintf(buff, BuffSize, "%s", "");
@@ -82,10 +84,11 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     status = OUT_OF_BOUNDS;
   }
-  S32 *ptr = (S32 *)DS_GENERATED_DATA[id].data;
+  DS_DATA element = Get_Element_By_Id(id);
+  S32 *ptr = (S32 *)element.data;
   if (ptr)
   {
-    if (DS_GENERATED_DATA[id].type != INT)
+    if (element.type != INT)
     {
       status = TYPE_ERROR;
     }
@@ -111,10 +114,11 @@ DSError DS_WriteString(const DSID id, char *string)
   {
     status = OUT_OF_BOUNDS;
   }
-  char *ptr = (char *)DS_GENERATED_DATA[id].data;
+  DS_DATA element = Get_Element_By_Id(id);
+  char *ptr = (char *)element.data;
   if (ptr)
   {
-    if (DS_GENERATED_DATA[id].type != STRING)
+    if (element.type != STRING)
     {
       status = TYPE_ERROR;
     }
