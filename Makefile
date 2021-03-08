@@ -6,8 +6,8 @@ FILES=$(filter-out tests.c, $(wildcard *.c))
 TEST_FILES=$(filter-out main.c, $(wildcard *.c))
 
 debug:
-	gcc -o $(OUT_DIR)/$(OUT_FILE) -std=$(STD) $(FILES)
-	$(OUT_DIR)/$(OUT_FILE) -d
+	gcc -o $(OUT_DIR)/$(OUT_FILE) -std=$(STD) $(FILES) -DDEBUG
+	$(OUT_DIR)/$(OUT_FILE)
 
 production:
 	gcc -o $(OUT_DIR)/$(OUT_FILE) -std=$(STD) $(FILES)

@@ -10,7 +10,9 @@ DS_DATA DS_GENERATED_DATA[DATA_SIZE];
 
 void Load_Data()
 {
+#ifdef DEBUG
     printf("Started loading data\n");
+#endif
     DS_GENERATED_DATA[CLUTCH].data = &CLUTCH_Data;
     DS_GENERATED_DATA[CLUTCH].type = INT;
 
@@ -22,5 +24,7 @@ void Load_Data()
 
     DS_GENERATED_DATA[ENGINE].data = &ENGINE_Data;
     DS_GENERATED_DATA[ENGINE].type = STRING;
+#ifdef DEBUG
     printf("Finished loading data\n");
+#endif
 }

@@ -3,8 +3,6 @@
 #include <math.h>
 #include <string.h>
 
-bool DEBUG;
-
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
   DSError status = SUCCESS;
@@ -32,10 +30,9 @@ DSError DS_ReadInt(const DSID id, S32 *value)
       status = POINTER_ERROR;
     }
   }
-  if (DEBUG)
-  {
-    Log_Result(__FUNCTION__, status);
-  }
+#ifdef DEBUG
+  Log_Result(__FUNCTION__, status);
+#endif
   return status;
 }
 
@@ -76,10 +73,9 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
       status = POINTER_ERROR;
     }
   }
-  if (DEBUG)
-  {
-    Log_Result(__FUNCTION__, status);
-  }
+#ifdef DEBUG
+  Log_Result(__FUNCTION__, status);
+#endif
   return status;
 }
 
@@ -106,10 +102,9 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     status = POINTER_ERROR;
   }
-  if (DEBUG)
-  {
-    Log_Result(__FUNCTION__, status);
-  }
+#ifdef DEBUG
+  Log_Result(__FUNCTION__, status);
+#endif
   return status;
 }
 
@@ -136,9 +131,8 @@ DSError DS_WriteString(const DSID id, char *string)
   {
     status = POINTER_ERROR;
   }
-  if (DEBUG)
-  {
-    Log_Result(__FUNCTION__, status);
-  }
+#ifdef DEBUG
+  Log_Result(__FUNCTION__, status);
+#endif
   return status;
 }

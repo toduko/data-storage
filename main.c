@@ -4,18 +4,9 @@
 
 int main(int argc, char *argv[])
 {
-  if (argc == 2)
-  {
-    if (strcmp(argv[1], "-d") == 0)
-    {
-      printf("DEBUG MODE ENABLED\n");
-      DEBUG = true;
-    }
-  }
-
   Load_Data();
 
-  while (true)
+  while (1)
   {
     /*Main loop where data is interacted with*/
     break;

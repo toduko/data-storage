@@ -4,8 +4,6 @@
 #include "generated_data.h"
 #include <stdio.h>
 
-extern bool DEBUG;
-
 DSError DS_ReadInt(const DSID id, S32 *value);
 
 DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize);
