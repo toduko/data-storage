@@ -2,6 +2,7 @@
 
 void Log_Result(const char *name, const DSError status)
 {
+#ifdef DEBUG
   system(" ");
 
   char *color;
@@ -34,4 +35,5 @@ void Log_Result(const char *name, const DSError status)
     break;
   }
   printf("%s result: %s%s%s\n", name, color, result, RESET);
+#endif
 }
