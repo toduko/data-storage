@@ -1,4 +1,6 @@
+#include "acutest.h"
 #include "ds_interface.h"
+#include "generated_data.h"
 #include "tests.h"
 
 void Print_Case_Number(DSID i)

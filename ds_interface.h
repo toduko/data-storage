@@ -1,8 +1,8 @@
 #ifndef DS_INTERFACE_H_
 #define DS_INTERFACE_H_
 
-#include "generated_data.h"
-#include <stdio.h>
+#include "types.h"
+#include "generated_ids.h"
 
 DSError DS_ReadInt(const DSID id, S32 *value);
 
