@@ -3,8 +3,8 @@
 
 S32 CLUTCH_Data;
 S32 GEAR_BOX_Data;
-char BRAKE_PEDAL_Data[MAX_STR_SIZE] = "BRAKE v1";
-char ENGINE_Data[MAX_STR_SIZE] = "ENGINE v1";
+String BRAKE_PEDAL_Data = {.size = 9, .str = "BREAK v1"};
+String ENGINE_Data = {.size = 10, .str = "ENGINE v1"};
 
 DS_DATA DS_GENERATED_DATA[DATA_SIZE] = {
     {.data = &BRAKE_PEDAL_Data, .type = STRING},

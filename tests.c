@@ -87,9 +87,8 @@ void Test_ReadWriteString(void)
         Print_Case_Number(i);
 
         DS_DATA element = Get_Element_By_Id(i);
-        char str_to_write[2];
-        sprintf(str_to_write, "%d", i);
-        S32 val_to_write = i * 10;
+        char str_to_write[MAX_STR_SIZE];
+        sprintf(str_to_write, "%d", i * 10);
 
         status = DS_WriteString(i, str_to_write);
         if (element.type == STRING)

@@ -46,7 +46,7 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
   else
   {
     DS_DATA element = Get_Element_By_Id(id);
-    char *ptr = (char *)element.data;
+    String *ptr = (String *)element.data;
     if (ptr)
     {
       if (element.type != STRING)
@@ -56,12 +56,11 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
       }
       else
       {
-        U32 data_len = strlen(ptr);
-        if (BuffSize < data_len)
+        if (BuffSize < ptr->size)
         {
           status = BUFFER_TOO_SMALL;
         }
-        snprintf(buff, BuffSize, "%s", ptr);
+        snprintf(buff, BuffSize, "%s", ptr->str);
       }
     }
     else
@@ -110,7 +109,7 @@ DSError DS_WriteString(const DSID id, char *string)
     status = OUT_OF_BOUNDS;
   }
   DS_DATA element = Get_Element_By_Id(id);
-  char *ptr = (char *)element.data;
+  String *ptr = (String *)element.data;
   if (ptr)
   {
     if (element.type != STRING)
@@ -119,14 +118,11 @@ DSError DS_WriteString(const DSID id, char *string)
     }
     else
     {
-      if (strlen(string) > strlen(ptr))
+      if (strlen(string) > ptr->size)
       {
         status = BUFFER_TOO_BIG;
       }
-      else
-      {
-        snprintf(ptr, strlen(string) + 1, "%s", string);
-      }
+      snprintf(ptr->str, ptr->size, "%s", string);
     }
   }
   else

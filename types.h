@@ -28,4 +28,10 @@ typedef struct
   void *data;
 } DS_DATA;
 
+typedef struct
+{
+  U8 size;
+  char str[];
+} String;
+
 #endif
