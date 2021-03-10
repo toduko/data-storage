@@ -7,16 +7,22 @@
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
   DSError status = SUCCESS;
-  if (id >= DATA_SIZE)
+  if (!value)
   {
-    status = OUT_OF_BOUNDS;
+    status = POINTER_ERROR;
   }
   else
   {
-    DS_DATA element = Get_Element_By_Id(id);
-    S32 *ptr = (S32 *)element.data;
-    if (ptr)
+
+    if (id >= DATA_SIZE)
     {
+      status = OUT_OF_BOUNDS;
+    }
+    else
+    {
+      DS_DATA element = Get_Element_By_Id(id);
+      S32 *ptr = (S32 *)element.data;
+
       if (element.type != INT)
       {
         status = TYPE_ERROR;
@@ -27,10 +33,6 @@ DSError DS_ReadInt(const DSID id, S32 *value)
         *value = *ptr;
       }
     }
-    else
-    {
-      status = POINTER_ERROR;
-    }
   }
   Log_Result(__FUNCTION__, status);
   return status;
@@ -39,16 +41,20 @@ DSError DS_ReadInt(const DSID id, S32 *value)
 DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
 {
   DSError status = SUCCESS;
-  if (id >= DATA_SIZE)
+  if (!buff)
   {
-    status = OUT_OF_BOUNDS;
+    status = POINTER_ERROR;
   }
   else
   {
-    DS_DATA element = Get_Element_By_Id(id);
-    String *ptr = (String *)element.data;
-    if (ptr)
+    if (id >= DATA_SIZE)
     {
+      status = OUT_OF_BOUNDS;
+    }
+    else
+    {
+      DS_DATA element = Get_Element_By_Id(id);
+      String *ptr = (String *)element.data;
       if (element.type != STRING)
       {
         status = TYPE_ERROR;
@@ -62,11 +68,6 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
         }
         snprintf(buff, BuffSize, "%s", ptr->str);
       }
-    }
-    else
-    {
-      snprintf(buff, BuffSize, "%s", "");
-      status = POINTER_ERROR;
     }
   }
   Log_Result(__FUNCTION__, status);
@@ -82,20 +83,13 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   }
   DS_DATA element = Get_Element_By_Id(id);
   S32 *ptr = (S32 *)element.data;
-  if (ptr)
+  if (element.type != INT)
   {
-    if (element.type != INT)
-    {
-      status = TYPE_ERROR;
-    }
-    else
-    {
-      *ptr = value;
-    }
+    status = TYPE_ERROR;
   }
   else
   {
-    status = POINTER_ERROR;
+    *ptr = value;
   }
   Log_Result(__FUNCTION__, status);
   return status;
@@ -104,14 +98,19 @@ DSError DS_WriteInt(const DSID id, const S32 value)
 DSError DS_WriteString(const DSID id, char *string)
 {
   DSError status = SUCCESS;
-  if (id >= DATA_SIZE)
+  if (!string)
   {
-    status = OUT_OF_BOUNDS;
+    status = POINTER_ERROR;
   }
-  DS_DATA element = Get_Element_By_Id(id);
-  String *ptr = (String *)element.data;
-  if (ptr)
+  else
   {
+    if (id >= DATA_SIZE)
+    {
+      status = OUT_OF_BOUNDS;
+    }
+    DS_DATA element = Get_Element_By_Id(id);
+    String *ptr = (String *)element.data;
+
     if (element.type != STRING)
     {
       status = TYPE_ERROR;
@@ -124,10 +123,6 @@ DSError DS_WriteString(const DSID id, char *string)
       }
       snprintf(ptr->str, ptr->size, "%s", string);
     }
-  }
-  else
-  {
-    status = POINTER_ERROR;
   }
   Log_Result(__FUNCTION__, status);
   return status;
