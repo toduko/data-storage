@@ -70,6 +70,7 @@ void Test_ReadWriteInt(void)
         }
     }
 
+    TEST_CASE("OUT_OF_BOUNDS");
     status = DS_WriteInt(DATA_SIZE, s32Data);
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
@@ -127,6 +128,7 @@ void Test_ReadWriteString(void)
         }
     }
 
+    TEST_CASE("OUT_OF_BOUNDS");
     status = DS_WriteString(DATA_SIZE, str);
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
