@@ -70,6 +70,11 @@ void Test_ReadWriteInt(void)
         }
     }
 
+    status = DS_WriteInt(DATA_SIZE, s32Data);
+    TEST_CHECK(status == OUT_OF_BOUNDS);
+    TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+    TEST_MSG("Produced: %d", status);
+
     status = DS_ReadInt(DATA_SIZE, &s32Data);
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
@@ -121,6 +126,16 @@ void Test_ReadWriteString(void)
             TEST_MSG("Produced: %d", status);
         }
     }
+
+    status = DS_WriteString(DATA_SIZE, str);
+    TEST_CHECK(status == OUT_OF_BOUNDS);
+    TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+    TEST_MSG("Produced: %d", status);
+
+    status = DS_ReadString(DATA_SIZE, str, sizeof(str));
+    TEST_CHECK(status == OUT_OF_BOUNDS);
+    TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+    TEST_MSG("Produced: %d", status);
 }
 
 TEST_LIST = {

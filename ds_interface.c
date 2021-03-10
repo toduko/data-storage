@@ -81,15 +81,18 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     status = OUT_OF_BOUNDS;
   }
-  DS_DATA element = Get_Element_By_Id(id);
-  S32 *ptr = (S32 *)element.data;
-  if (element.type != INT)
-  {
-    status = TYPE_ERROR;
-  }
   else
   {
-    *ptr = value;
+    DS_DATA element = Get_Element_By_Id(id);
+    S32 *ptr = (S32 *)element.data;
+    if (element.type != INT)
+    {
+      status = TYPE_ERROR;
+    }
+    else
+    {
+      *ptr = value;
+    }
   }
   Log_Result(__FUNCTION__, status);
   return status;
@@ -108,20 +111,23 @@ DSError DS_WriteString(const DSID id, char *string)
     {
       status = OUT_OF_BOUNDS;
     }
-    DS_DATA element = Get_Element_By_Id(id);
-    String *ptr = (String *)element.data;
-
-    if (element.type != STRING)
-    {
-      status = TYPE_ERROR;
-    }
     else
     {
-      if (strlen(string) > ptr->size)
+      DS_DATA element = Get_Element_By_Id(id);
+      String *ptr = (String *)element.data;
+
+      if (element.type != STRING)
       {
-        status = BUFFER_TOO_BIG;
+        status = TYPE_ERROR;
       }
-      snprintf(ptr->str, ptr->size, "%s", string);
+      else
+      {
+        if (strlen(string) > ptr->size)
+        {
+          status = BUFFER_TOO_BIG;
+        }
+        snprintf(ptr->str, ptr->size, "%s", string);
+      }
     }
   }
   Log_Result(__FUNCTION__, status);
