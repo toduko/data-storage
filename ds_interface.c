@@ -14,7 +14,7 @@ DSError DS_ReadInt(const DSID id, S32 *value)
   else
   {
 
-    if (id >= DATA_SIZE)
+    if (id >= DC_ID_MAX)
     {
       status = OUT_OF_BOUNDS;
     }
@@ -47,7 +47,7 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
   }
   else
   {
-    if (id >= DATA_SIZE)
+    if (id >= DC_ID_MAX)
     {
       status = OUT_OF_BOUNDS;
     }
@@ -77,7 +77,7 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
 DSError DS_WriteInt(const DSID id, const S32 value)
 {
   DSError status = SUCCESS;
-  if (id >= DATA_SIZE)
+  if (id >= DC_ID_MAX)
   {
     status = OUT_OF_BOUNDS;
   }
@@ -107,7 +107,7 @@ DSError DS_WriteString(const DSID id, char *string)
   }
   else
   {
-    if (id >= DATA_SIZE)
+    if (id >= DC_ID_MAX)
     {
       status = OUT_OF_BOUNDS;
     }

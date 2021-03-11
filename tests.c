@@ -13,7 +13,7 @@ void Print_Case_Number(DSID i)
 void Test_LoadData(void)
 {
     DSID i;
-    for (i = 0; i < DATA_SIZE; ++i)
+    for (i = 0; i < DC_ID_MAX; ++i)
     {
         Print_Case_Number(i);
 
@@ -31,7 +31,7 @@ void Test_ReadWriteInt(void)
     DSError status;
 
     DSID i;
-    for (i = 0; i < DATA_SIZE; ++i)
+    for (i = 0; i < DC_ID_MAX; ++i)
     {
         Print_Case_Number(i);
 
@@ -71,12 +71,12 @@ void Test_ReadWriteInt(void)
     }
 
     TEST_CASE("OUT_OF_BOUNDS");
-    status = DS_WriteInt(DATA_SIZE, s32Data);
+    status = DS_WriteInt(DC_ID_MAX, s32Data);
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
     TEST_MSG("Produced: %d", status);
 
-    status = DS_ReadInt(DATA_SIZE, &s32Data);
+    status = DS_ReadInt(DC_ID_MAX, &s32Data);
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
     TEST_MSG("Produced: %d", status);
@@ -88,7 +88,7 @@ void Test_ReadWriteString(void)
     DSID status;
 
     DSID i;
-    for (i = 0; i < DATA_SIZE; ++i)
+    for (i = 0; i < DC_ID_MAX; ++i)
     {
         Print_Case_Number(i);
 
@@ -129,12 +129,12 @@ void Test_ReadWriteString(void)
     }
 
     TEST_CASE("OUT_OF_BOUNDS");
-    status = DS_WriteString(DATA_SIZE, str);
+    status = DS_WriteString(DC_ID_MAX, str);
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
     TEST_MSG("Produced: %d", status);
 
-    status = DS_ReadString(DATA_SIZE, str, sizeof(str));
+    status = DS_ReadString(DC_ID_MAX, str, sizeof(str));
     TEST_CHECK(status == OUT_OF_BOUNDS);
     TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
     TEST_MSG("Produced: %d", status);

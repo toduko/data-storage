@@ -7,7 +7,7 @@ typedef enum
     CLUTCH,
     GEAR_BOX,
     ENGINE,
-    DATA_SIZE
+    DC_ID_MAX
 } DSID;
 
 #endif
