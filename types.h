@@ -31,7 +31,7 @@ typedef struct
 typedef struct
 {
   U8 size;
-  char str[];
+  char *str;
 } String;
 
 #endif

@@ -1,10 +1,27 @@
 #include "generated_data.h"
-#include <stdio.h>
+
+/*
+** INTEGERS
+*/
 
 S32 CLUTCH_Data;
 S32 GEAR_BOX_Data;
-String BRAKE_PEDAL_Data = {.size = 9, .str = "BREAK v1"};
-String ENGINE_Data = {.size = 10, .str = "ENGINE v1"};
+
+/*
+** STRINGS
+*/
+
+#define BRAKE_PEDAL_Size 9
+char BRAKE_PEDAL_Str[BRAKE_PEDAL_Size] = "BRK";
+String BRAKE_PEDAL_Data = {.size = BRAKE_PEDAL_Size, .str = BRAKE_PEDAL_Str};
+
+#define ENGINE_Size 10
+char ENGINE_Str[ENGINE_Size] = "ENG";
+String ENGINE_Data = {.size = ENGINE_Size, .str = ENGINE_Str};
+
+/*
+** DATA INITIALIZATION
+*/
 
 DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.data = &BRAKE_PEDAL_Data, .type = STRING},
