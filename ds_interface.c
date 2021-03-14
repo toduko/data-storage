@@ -37,13 +37,14 @@ DSError DS_ReadInt(const DSID id, S32 *value)
         if (element.size == S16_SIZE)
         {
           S16 *ptr = (S16 *)element.data;
-          /* Set last 16 bits of value to ptr */
           U8 i;
+          U8 ptr_idx;
           if (IS_BIG_ENDIAN)
           {
-            for (i = 31; i >= 16; --i)
+             /* Set last 16 bits of value to ptr */
+            for (i = 31, ptr_idx = 15; i >= 16, ptr_idx >= 0; --i, --ptr_idx)
             {
-              if (BitVal(*ptr, i))
+              if (BitVal(*ptr, ptr_idx))
               {
                 SetBit(*value, i);
               }
@@ -60,6 +61,7 @@ DSError DS_ReadInt(const DSID id, S32 *value)
           }
           else
           {
+             /* Set first 16 bits of value to ptr */
             for (i = 0; i < 16; ++i)
             {
               if (BitVal(*ptr, i))
@@ -81,13 +83,14 @@ DSError DS_ReadInt(const DSID id, S32 *value)
         if (element.size == S8_SIZE)
         {
           S16 *ptr = (S16 *)element.data;
-          /* Set last 8 bits of value to ptr */
           U8 i;
+          U8 ptr_idx;
           if (IS_BIG_ENDIAN)
           {
-            for (i = 31; i >= 24; --i)
+            /* Set last 8 bits of value to ptr */
+            for (i = 31, ptr_idx = 7; i >= 24, ptr_idx >= 0; --i, --ptr_idx)
             {
-              if (BitVal(*ptr, i))
+              if (BitVal(*ptr, ptr_idx))
               {
                 SetBit(*value, i);
               }
@@ -104,6 +107,7 @@ DSError DS_ReadInt(const DSID id, S32 *value)
           }
           else
           {
+            /* Set fisrt 8 bits of value to ptr */
             for (i = 0; i < 8; ++i)
             {
               if (BitVal(*ptr, i))
@@ -196,17 +200,36 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S16 *ptr = (S16 *)element.data;
-          /* Set first 16 bits of ptr to value */
           U8 i;
-          for (i = 0; i < 16; ++i)
+          U8 val_idx;
+          if (IS_BIG_ENDIAN)
           {
-            if (BitVal(value, i))
+            /* Set last 16 bits of ptr to value */
+            for (i = 31, val_idx = 15; i >= 16, val_idx >= 0; --i, --val_idx)
             {
-              SetBit(*ptr, i);
+              if (BitVal(value, val_idx))
+              {
+                SetBit(*ptr, i);
+              }
+              else
+              {
+                ClearBit(*ptr, i);
+              }
             }
-            else
+          }
+          else
+          {
+            /* Set first 16 bits of ptr to value */
+            for (i = 0; i < 16; ++i)
             {
-              ClearBit(*ptr, i);
+              if (BitVal(value, i))
+              {
+                SetBit(*ptr, i);
+              }
+              else
+              {
+                ClearBit(*ptr, i);
+              }
             }
           }
         }
@@ -220,17 +243,36 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S8 *ptr = (S8 *)element.data;
-          /* Set first 8 bits of ptr to value */
           U8 i;
-          for (i = 0; i < 8; ++i)
+          U8 val_idx;
+          if (IS_BIG_ENDIAN)
           {
-            if (BitVal(value, i))
+            /* Set last 8 bits of ptr to value */
+            for (i = 31, val_idx = 7; i >= 24, val_idx >= 0; --i, --val_idx)
             {
-              SetBit(*ptr, i);
+              if (BitVal(value, val_idx))
+              {
+                SetBit(*ptr, i);
+              }
+              else
+              {
+                ClearBit(*ptr, i);
+              }
             }
-            else
+          }
+          else
+          {
+            /* Set first 8 bits of ptr to value */
+            for (i = 0; i < 8; ++i)
             {
-              ClearBit(*ptr, i);
+              if (BitVal(value, i))
+              {
+                SetBit(*ptr, i);
+              }
+              else
+              {
+                ClearBit(*ptr, i);
+              }
             }
           }
         }
