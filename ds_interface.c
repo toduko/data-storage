@@ -30,7 +30,18 @@ DSError DS_ReadInt(const DSID id, S32 *value)
       }
       else
       {
-        *value = *ptr;
+        if (element.size == S32_SIZE)
+        {
+          *value = *ptr;
+        }
+        if (element.size == S16_SIZE)
+        {
+          *value = (S16)*ptr;
+        }
+        if (element.size == S8_SIZE)
+        {
+          *value = (S8)*ptr;
+        }
       }
     }
   }
@@ -54,7 +65,7 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      String *ptr = (String *)element.data;
+      char *ptr = (char *)element.data;
       if (element.type != STRING)
       {
         status = TYPE_ERROR;
@@ -62,11 +73,11 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
       }
       else
       {
-        if (BuffSize < ptr->size)
+        if (BuffSize < element.size)
         {
           status = BUFFER_TOO_SMALL;
         }
-        snprintf(buff, BuffSize, "%s", ptr->str);
+        snprintf(buff, BuffSize, "%s", ptr);
       }
     }
   }
@@ -91,7 +102,18 @@ DSError DS_WriteInt(const DSID id, const S32 value)
     }
     else
     {
-      *ptr = value;
+        if (element.size == S32_SIZE)
+        {
+          *ptr = value;
+        }
+        if (element.size == S16_SIZE)
+        {
+          *ptr = (S16)value;
+        }
+        if (element.size == S8_SIZE)
+        {
+          *ptr= (S8)value;
+        }
     }
   }
   Log_Result(__FUNCTION__, status);
@@ -114,7 +136,7 @@ DSError DS_WriteString(const DSID id, char *string)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      String *ptr = (String *)element.data;
+      char *ptr = (char *)element.data;
 
       if (element.type != STRING)
       {
@@ -122,11 +144,11 @@ DSError DS_WriteString(const DSID id, char *string)
       }
       else
       {
-        if (strlen(string) > ptr->size)
+        if (strlen(string) > element.size)
         {
           status = BUFFER_TOO_BIG;
         }
-        snprintf(ptr->str, ptr->size, "%s", string);
+        snprintf(ptr, element.size, "%s", string);
       }
     }
   }

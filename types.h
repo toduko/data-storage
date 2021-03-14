@@ -4,6 +4,11 @@
 #include <stdint.h>
 
 typedef int32_t S32;
+#define S32_SIZE sizeof(S32)
+typedef int16_t S16;
+#define S16_SIZE sizeof(S16)
+typedef uint8_t S8;
+#define S8_SIZE sizeof(S8)
 typedef uint32_t U32;
 typedef uint8_t U8;
 
@@ -25,13 +30,8 @@ typedef enum
 typedef struct
 {
   U8 type;
+  U8 size;
   void *data;
 } DS_DATA;
-
-typedef struct
-{
-  U8 size;
-  char *str;
-} String;
 
 #endif
