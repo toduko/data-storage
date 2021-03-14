@@ -4,17 +4,6 @@
 #include <math.h>
 #include <string.h>
 
-/* Return Data.Y value */
-#define BitVal(data, y) ((data >> y) & 1)
-/* Set Data.Y to 1 */
-#define SetBit(data, y) data |= (1 << y)
-/* Clear Data.Y to 0 */
-#define ClearBit(data, y) data &= ~(1 << y)
-/* Togle Data.Y value */
-#define TogleBit(data, y) (data ^= BitVal(y))
-/* Togle Data value */
-#define Togle(data) (data = ~data)
-
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
   DSError status = SUCCESS;
@@ -48,45 +37,89 @@ DSError DS_ReadInt(const DSID id, S32 *value)
         if (element.size == S16_SIZE)
         {
           S16 *ptr = (S16 *)element.data;
-          /* Set first 16 bits of value to ptr */
+          /* Set last 16 bits of value to ptr */
           U8 i;
-          for (i = 0; i < 16; ++i)
+          if (IS_BIG_ENDIAN)
           {
-            if (BitVal(*ptr, i))
+            for (i = 31; i >= 16; --i)
             {
-              SetBit(*value, i);
+              if (BitVal(*ptr, i))
+              {
+                SetBit(*value, i);
+              }
+              else
+              {
+                ClearBit(*value, i);
+              }
             }
-            else
+            /* Clear remaining 16 bits */
+            for (i = 15; i >= 0; --i)
             {
               ClearBit(*value, i);
             }
           }
-          /* Clear remaining 16 bits */
-          for (i = 16; i < 32; ++i)
+          else
           {
-            ClearBit(*value, i);
+            for (i = 0; i < 16; ++i)
+            {
+              if (BitVal(*ptr, i))
+              {
+                SetBit(*value, i);
+              }
+              else
+              {
+                ClearBit(*value, i);
+              }
+            }
+            /* Clear remaining 16 bits */
+            for (i = 16; i < 32; ++i)
+            {
+              ClearBit(*value, i);
+            }
           }
         }
         if (element.size == S8_SIZE)
         {
           S16 *ptr = (S16 *)element.data;
-          /* Set first 8 bits of value to ptr */
+          /* Set last 8 bits of value to ptr */
           U8 i;
-          for (i = 0; i < 8; ++i)
+          if (IS_BIG_ENDIAN)
           {
-            if (BitVal(*ptr, i))
+            for (i = 31; i >= 24; --i)
             {
-              SetBit(*value, i);
+              if (BitVal(*ptr, i))
+              {
+                SetBit(*value, i);
+              }
+              else
+              {
+                ClearBit(*value, i);
+              }
             }
-            else
+            /* Clear remaining 24 bits */
+            for (i = 23; i >= 0; --i)
             {
               ClearBit(*value, i);
             }
           }
-          /* Clear remaining 24 bits */
-          for (i = 8; i < 32; ++i)
+          else
           {
-            ClearBit(*value, i);
+            for (i = 0; i < 8; ++i)
+            {
+              if (BitVal(*ptr, i))
+              {
+                SetBit(*value, i);
+              }
+              else
+              {
+                ClearBit(*value, i);
+              }
+            }
+            /* Clear remaining 24 bits */
+            for (i = 8; i < 32; ++i)
+            {
+              ClearBit(*value, i);
+            }
           }
         }
       }
