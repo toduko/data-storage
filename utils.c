@@ -33,6 +33,10 @@ void Log_Result(const char *name, const DSError status)
     color = RED;
     result = "TYPE_ERROR";
     break;
+  case INT_SIZE_ERROR:
+    color = RED;
+    result = "INT_SIZE_ERROR";
+    break;
   }
   printf("%s result: %s%s%s\n", name, color, result, RESET);
 #endif

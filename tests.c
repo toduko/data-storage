@@ -44,6 +44,32 @@ void Test_ReadWriteInt(void)
             TEST_CHECK(status == SUCCESS);
             TEST_MSG("Expected: %d", SUCCESS);
             TEST_MSG("Produced: %d", status);
+
+            if (element.size == S16_SIZE)
+            {
+                status = DS_WriteInt(i, S16_MAX + 1);
+                TEST_CHECK(status == INT_SIZE_ERROR);
+                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_MSG("Produced: %d", status);
+
+                status = DS_WriteInt(i, S16_MIN - 1);
+                TEST_CHECK(status == INT_SIZE_ERROR);
+                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_MSG("Produced: %d", status);
+            }
+
+            if (element.size == S8_SIZE)
+            {
+                status = DS_WriteInt(i, S8_MAX + 1);
+                TEST_CHECK(status == INT_SIZE_ERROR);
+                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_MSG("Produced: %d", status);
+
+                status = DS_WriteInt(i, S8_MIN - 1);
+                TEST_CHECK(status == INT_SIZE_ERROR);
+                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_MSG("Produced: %d", status);
+            }
         }
         else
         {

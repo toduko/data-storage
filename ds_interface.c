@@ -4,6 +4,17 @@
 #include <math.h>
 #include <string.h>
 
+/* Return Data.Y value */
+#define BitVal(data, y) ((data >> y) & 1)
+/* Set Data.Y to 1 */
+#define SetBit(data, y) data |= (1 << y)
+/* Clear Data.Y to 0 */
+#define ClearBit(data, y) data &= ~(1 << y)
+/* Togle Data.Y value */
+#define TogleBit(data, y) (data ^= BitVal(y))
+/* Togle Data value */
+#define Togle(data) (data = ~data)
+
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
   DSError status = SUCCESS;
@@ -21,7 +32,6 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      S32 *ptr = (S32 *)element.data;
 
       if (element.type != INT)
       {
@@ -32,15 +42,52 @@ DSError DS_ReadInt(const DSID id, S32 *value)
       {
         if (element.size == S32_SIZE)
         {
+          S32 *ptr = (S32 *)element.data;
           *value = *ptr;
         }
         if (element.size == S16_SIZE)
         {
-          *value = (S16)*ptr;
+          S16 *ptr = (S16 *)element.data;
+          /* Set first 16 bits of value to ptr */
+          U8 i;
+          for (i = 0; i < 16; ++i)
+          {
+            if (BitVal(*ptr, i))
+            {
+              SetBit(*value, i);
+            }
+            else
+            {
+              ClearBit(*value, i);
+            }
+          }
+          /* Clear remaining 16 bits */
+          for (i = 16; i < 32; ++i)
+          {
+            ClearBit(*value, i);
+          }
         }
         if (element.size == S8_SIZE)
         {
-          *value = (S8)*ptr;
+          S16 *ptr = (S16 *)element.data;
+          /* Set first 8 bits of value to ptr */
+          U8 i;
+          for (i = 0; i < 8; ++i)
+          {
+            if (BitVal(*ptr, i))
+            {
+              SetBit(*value, i);
+            }
+            else
+            {
+              ClearBit(*value, i);
+            }
+          }
+          /* Clear remaining 24 bits */
+          for (i = 8; i < 32; ++i)
+          {
+            ClearBit(*value, i);
+          }
         }
       }
     }
@@ -95,25 +142,66 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   else
   {
     DS_DATA element = Get_Element_By_Id(id);
-    S32 *ptr = (S32 *)element.data;
+
     if (element.type != INT)
     {
       status = TYPE_ERROR;
     }
     else
     {
-        if (element.size == S32_SIZE)
+      if (element.size == S32_SIZE)
+      {
+        S32 *ptr = (S32 *)element.data;
+        *ptr = value;
+      }
+      if (element.size == S16_SIZE)
+      {
+        if (value > S16_MAX || value < S16_MIN)
         {
-          *ptr = value;
+          status = INT_SIZE_ERROR;
         }
-        if (element.size == S16_SIZE)
+        else
         {
-          *ptr = (S16)value;
+          S16 *ptr = (S16 *)element.data;
+          /* Set first 16 bits of ptr to value */
+          U8 i;
+          for (i = 0; i < 16; ++i)
+          {
+            if (BitVal(value, i))
+            {
+              SetBit(*ptr, i);
+            }
+            else
+            {
+              ClearBit(*ptr, i);
+            }
+          }
         }
-        if (element.size == S8_SIZE)
+      }
+      if (element.size == S8_SIZE)
+      {
+        if (value > S8_MAX || value < S8_MIN)
         {
-          *ptr= (S8)value;
+          status = INT_SIZE_ERROR;
         }
+        else
+        {
+          S8 *ptr = (S8 *)element.data;
+          /* Set first 8 bits of ptr to value */
+          U8 i;
+          for (i = 0; i < 8; ++i)
+          {
+            if (BitVal(value, i))
+            {
+              SetBit(*ptr, i);
+            }
+            else
+            {
+              ClearBit(*ptr, i);
+            }
+          }
+        }
+      }
     }
   }
   Log_Result(__FUNCTION__, status);
