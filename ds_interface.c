@@ -32,22 +32,17 @@ DSError DS_ReadInt(const DSID id, S32 *value)
         if (element.type == TYPE_S32)
         {
           S32 *ptr = (S32 *)element.data;
-          S32 el_val = *ptr;
-          *value = el_val;
+          *value = *ptr;
         }
         if (element.type == TYPE_S16)
         {
-          S16 *ptr = (S16 *)element.data;
-          S16 el_val = *ptr;
-          S16 s32arr[2] = {el_val, 0};
-          *value = S16_To_S32_Lit_End(s32arr);
+          S16 el_val = ((S8 *)element.data)[0] | (((S8 *)element.data)[1] << 8);
+          *value = el_val;
         }
         if (element.type == TYPE_S8)
         {
-          S8 *ptr = (S8 *)element.data;
-          S8 el_val = *ptr;
-          S8 s32arr[4] = {el_val, 0, 0, 0};
-          *value = S8_To_S32_Lit_End(s32arr);
+          S8 el_val = ((S8 *)element.data)[0];
+          *value = el_val;
         }
       }
     }
@@ -125,7 +120,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
           S16 *ptr = (S16 *)element.data;
           S16 s16arr[2];
           S32_To_S16_Lit_End(value, s16arr);
-          *ptr = s16arr[0];
+          *ptr = s16arr[0] | s16arr[1];
         }
       }
       if (element.type == TYPE_S8)
@@ -139,7 +134,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
           S8 *ptr = (S8 *)element.data;
           S8 s8arr[4];
           S32_To_S8_Lit_End(value, s8arr);
-          *ptr = s8arr[0];
+          *ptr = s8arr[0] | s8arr[1];
         }
       }
     }
