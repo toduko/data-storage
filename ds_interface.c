@@ -22,105 +22,32 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     {
       DS_DATA element = Get_Element_By_Id(id);
 
-      if (element.type != INT)
+      if (element.type == TYPE_STRING)
       {
         status = TYPE_ERROR;
         *value = 0;
       }
       else
       {
-        if (element.size == S32_SIZE)
+        if (element.type == TYPE_S32)
         {
           S32 *ptr = (S32 *)element.data;
-          *value = *ptr;
+          S32 el_val = *ptr;
+          *value = el_val;
         }
-        if (element.size == S16_SIZE)
+        if (element.type == TYPE_S16)
         {
           S16 *ptr = (S16 *)element.data;
-          /* Set last 16 bits of value to ptr */
-          U8 i;
-          if (IS_BIG_ENDIAN)
-          {
-            for (i = 31; i >= 16; --i)
-            {
-              if (BitVal(*ptr, i))
-              {
-                SetBit(*value, i);
-              }
-              else
-              {
-                ClearBit(*value, i);
-              }
-            }
-            /* Clear remaining 16 bits */
-            for (i = 15; i >= 0; --i)
-            {
-              ClearBit(*value, i);
-            }
-          }
-          else
-          {
-            for (i = 0; i < 16; ++i)
-            {
-              if (BitVal(*ptr, i))
-              {
-                SetBit(*value, i);
-              }
-              else
-              {
-                ClearBit(*value, i);
-              }
-            }
-            /* Clear remaining 16 bits */
-            for (i = 16; i < 32; ++i)
-            {
-              ClearBit(*value, i);
-            }
-          }
+          S16 el_val = *ptr;
+          S16 s32arr[2] = {el_val, 0};
+          *value = S16_To_S32_Lit_End(s32arr);
         }
-        if (element.size == S8_SIZE)
+        if (element.type == TYPE_S8)
         {
-          S16 *ptr = (S16 *)element.data;
-          /* Set last 8 bits of value to ptr */
-          U8 i;
-          if (IS_BIG_ENDIAN)
-          {
-            for (i = 31; i >= 24; --i)
-            {
-              if (BitVal(*ptr, i))
-              {
-                SetBit(*value, i);
-              }
-              else
-              {
-                ClearBit(*value, i);
-              }
-            }
-            /* Clear remaining 24 bits */
-            for (i = 23; i >= 0; --i)
-            {
-              ClearBit(*value, i);
-            }
-          }
-          else
-          {
-            for (i = 0; i < 8; ++i)
-            {
-              if (BitVal(*ptr, i))
-              {
-                SetBit(*value, i);
-              }
-              else
-              {
-                ClearBit(*value, i);
-              }
-            }
-            /* Clear remaining 24 bits */
-            for (i = 8; i < 32; ++i)
-            {
-              ClearBit(*value, i);
-            }
-          }
+          S8 *ptr = (S8 *)element.data;
+          S8 el_val = *ptr;
+          S8 s32arr[4] = {el_val, 0, 0, 0};
+          *value = S8_To_S32_Lit_End(s32arr);
         }
       }
     }
@@ -145,19 +72,19 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      char *ptr = (char *)element.data;
-      if (element.type != STRING)
+      String *ptr = (String *)element.data;
+      if (element.type != TYPE_STRING)
       {
         status = TYPE_ERROR;
         snprintf(buff, BuffSize, "%s", "");
       }
       else
       {
-        if (BuffSize < element.size)
+        if (BuffSize < ptr->size)
         {
           status = BUFFER_TOO_SMALL;
         }
-        snprintf(buff, BuffSize, "%s", ptr);
+        snprintf(buff, BuffSize, "%s", ptr->str);
       }
     }
   }
@@ -176,18 +103,18 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     DS_DATA element = Get_Element_By_Id(id);
 
-    if (element.type != INT)
+    if (element.type == TYPE_STRING)
     {
       status = TYPE_ERROR;
     }
     else
     {
-      if (element.size == S32_SIZE)
+      if (element.type == TYPE_S32)
       {
         S32 *ptr = (S32 *)element.data;
         *ptr = value;
       }
-      if (element.size == S16_SIZE)
+      if (element.type == TYPE_S16)
       {
         if (value > S16_MAX || value < S16_MIN)
         {
@@ -196,22 +123,12 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S16 *ptr = (S16 *)element.data;
-          /* Set first 16 bits of ptr to value */
-          U8 i;
-          for (i = 0; i < 16; ++i)
-          {
-            if (BitVal(value, i))
-            {
-              SetBit(*ptr, i);
-            }
-            else
-            {
-              ClearBit(*ptr, i);
-            }
-          }
+          S16 s16arr[2];
+          S32_To_S16_Lit_End(value, s16arr);
+          *ptr = s16arr[0];
         }
       }
-      if (element.size == S8_SIZE)
+      if (element.type == TYPE_S8)
       {
         if (value > S8_MAX || value < S8_MIN)
         {
@@ -220,19 +137,9 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S8 *ptr = (S8 *)element.data;
-          /* Set first 8 bits of ptr to value */
-          U8 i;
-          for (i = 0; i < 8; ++i)
-          {
-            if (BitVal(value, i))
-            {
-              SetBit(*ptr, i);
-            }
-            else
-            {
-              ClearBit(*ptr, i);
-            }
-          }
+          S8 s8arr[4];
+          S32_To_S8_Lit_End(value, s8arr);
+          *ptr = s8arr[0];
         }
       }
     }
@@ -257,19 +164,19 @@ DSError DS_WriteString(const DSID id, char *string)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      char *ptr = (char *)element.data;
+      String *ptr = (String *)element.data;
 
-      if (element.type != STRING)
+      if (element.type != TYPE_STRING)
       {
         status = TYPE_ERROR;
       }
       else
       {
-        if (strlen(string) > element.size)
+        if (strlen(string) > ptr->size)
         {
           status = BUFFER_TOO_BIG;
         }
-        snprintf(ptr, element.size, "%s", string);
+        snprintf(ptr->str, ptr->size, "%s", string);
       }
     }
   }

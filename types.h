@@ -22,8 +22,10 @@ typedef uint8_t S8;
 typedef uint32_t U32;
 typedef uint8_t U8;
 
-#define INT 0
-#define STRING 1
+#define TYPE_S32 0
+#define TYPE_S16 1
+#define TYPE_S8 2
+#define TYPE_STRING 3
 
 #define MAX_STR_SIZE 256
 
@@ -41,8 +43,13 @@ typedef enum
 typedef struct
 {
   U8 type;
-  U8 size;
   void *data;
 } DS_DATA;
+
+typedef struct
+{
+  U8 size;
+  char *str;
+} String;
 
 #endif

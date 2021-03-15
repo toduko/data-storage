@@ -9,20 +9,14 @@
 #define YELLOW "\x1b[33m"
 #define RESET "\x1b[0m"
 
-/* Return Data.Y value */
-#define BitVal(data, y) ((data >> y) & 1)
-/* Set Data.Y to 1 */
-#define SetBit(data, y) data |= (1 << y)
-/* Clear Data.Y to 0 */
-#define ClearBit(data, y) data &= ~(1 << y)
-/* Togle Data.Y value */
-#define TogleBit(data, y) (data ^= BitVal(y))
-/* Togle Data value */
-#define Togle(data) (data = ~data)
-
-/* Check endianness */
-#define IS_BIG_ENDIAN (*(uint16_t *)"\0\xff" < 0x100)
-
 void Log_Result(const char *name, const DSError status);
+
+void S32_To_S8_Lit_End(S32 src, S8 *dest);
+
+S32 S8_To_S32_Lit_End(S8 *src);
+
+void S32_To_S16_Lit_End(S32 src, S16 *dest);
+
+S16 S16_To_S32_Lit_End(S16 *src);
 
 #endif

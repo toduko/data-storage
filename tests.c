@@ -39,13 +39,13 @@ void Test_ReadWriteInt(void)
         S32 val_to_write = i * 10;
 
         status = DS_WriteInt(i, val_to_write);
-        if (element.type == INT)
+        if (element.type != TYPE_STRING)
         {
             TEST_CHECK(status == SUCCESS);
             TEST_MSG("Expected: %d", SUCCESS);
             TEST_MSG("Produced: %d", status);
 
-            if (element.size == S16_SIZE)
+            if (element.type == TYPE_S16)
             {
                 status = DS_WriteInt(i, S16_MAX + 1);
                 TEST_CHECK(status == INT_SIZE_ERROR);
@@ -58,7 +58,7 @@ void Test_ReadWriteInt(void)
                 TEST_MSG("Produced: %d", status);
             }
 
-            if (element.size == S8_SIZE)
+            if (element.type == TYPE_S8)
             {
                 status = DS_WriteInt(i, S8_MAX + 1);
                 TEST_CHECK(status == INT_SIZE_ERROR);
@@ -78,10 +78,10 @@ void Test_ReadWriteInt(void)
             TEST_MSG("Produced: %d", status);
         }
         status = DS_ReadInt(i, &s32Data);
-        if (element.type == INT)
+        if (element.type != TYPE_STRING)
         {
-            TEST_CHECK(status == SUCCESS);
-            TEST_MSG("Expected: %d", SUCCESS);
+            TEST_CHECK(status != TYPE_ERROR);
+            TEST_MSG("Expected: != %d", TYPE_ERROR);
             TEST_MSG("Produced: %d", status);
 
             TEST_CHECK(s32Data == val_to_write);
@@ -123,7 +123,7 @@ void Test_ReadWriteString(void)
         sprintf(str_to_write, "%d", i * 10);
 
         status = DS_WriteString(i, str_to_write);
-        if (element.type == STRING)
+        if (element.type == TYPE_STRING)
         {
             TEST_CHECK(status == SUCCESS);
             TEST_MSG("Expected: %d", SUCCESS);
@@ -136,7 +136,7 @@ void Test_ReadWriteString(void)
             TEST_MSG("Produced: %d", status);
         }
         status = DS_ReadString(i, str, sizeof(str));
-        if (element.type == STRING)
+        if (element.type == TYPE_STRING)
         {
             TEST_CHECK(status == SUCCESS);
             TEST_MSG("Expected: %d", SUCCESS);
