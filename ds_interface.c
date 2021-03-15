@@ -134,7 +134,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
           S8 *ptr = (S8 *)element.data;
           S8 s8arr[4];
           S32_To_S8_Lit_End(value, s8arr);
-          *ptr = s8arr[0] | s8arr[1];
+          *ptr = s8arr[0] | s8arr[3];
         }
       }
     }
