@@ -65,3 +65,17 @@ S16 S16_To_S32_Lit_End(S16 *src)
 {
   return (S32)src[0] << 0 | (S32)src[1] << 16;
 }
+
+U8 Is_Big_Endian()
+{
+  unsigned int i = 1;
+  char *c = (char*)&i;
+  if (*c)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
+}

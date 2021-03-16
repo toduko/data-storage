@@ -19,4 +19,6 @@ void S32_To_S16_Lit_End(S32 src, S16 *dest);
 
 S16 S16_To_S32_Lit_End(S16 *src);
 
+U8 Is_Big_Endian();
+
 #endif

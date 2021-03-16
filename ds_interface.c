@@ -29,19 +29,34 @@ DSError DS_ReadInt(const DSID id, S32 *value)
       }
       else
       {
+        S32 el_val;
         if (element.type == TYPE_S32)
         {
-          S32 *ptr = (S32 *)element.data;
-          *value = *ptr;
+          el_val = *((S32 *)element.data);
+          *value = el_val;
         }
         if (element.type == TYPE_S16)
         {
-          S16 el_val = ((S8 *)element.data)[0] | (((S8 *)element.data)[1] << 8);
+          if (Is_Big_Endian())
+          {
+            el_val = ((S8 *)element.data)[0] << 24 | (((S8 *)element.data)[1] << 16);
+          }
+          else
+          {
+            el_val = ((S8 *)element.data)[0] << 0 | (((S8 *)element.data)[1] << 8);
+          }
           *value = el_val;
         }
         if (element.type == TYPE_S8)
         {
-          S8 el_val = ((S8 *)element.data)[0];
+          if (Is_Big_Endian())
+          {
+            el_val = ((S8 *)element.data)[0] << 24;
+          }
+          else
+          {
+            el_val = ((S8 *)element.data)[0] << 0;
+          }
           *value = el_val;
         }
       }
