@@ -86,7 +86,6 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
       if (element.type != TYPE_STRING)
       {
         status = TYPE_ERROR;
-        snprintf(buff, BuffSize, "%s", "");
       }
       else
       {
@@ -257,6 +256,93 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
       else
       {
         data.values[position] = value;
+      }
+    }
+  }
+  Log_Result(__FUNCTION__, status);
+  return status;
+}
+
+DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U32 BuffSize)
+{
+  DSError status = SUCCESS;
+  if (!buff)
+  {
+    status = POINTER_ERROR;
+  }
+  else
+  {
+    if (id >= DC_ID_MAX)
+    {
+      status = OUT_OF_BOUNDS;
+    }
+    else
+    {
+      DS_DATA element = Get_Element_By_Id(id);
+      if (element.type != TYPE_STRING_LIST)
+      {
+        status = TYPE_ERROR;
+      }
+      else
+      {
+        STRING_LIST data = *(STRING_LIST *)element.data;
+        if (position >= data.size)
+        {
+          status = OUT_OF_BOUNDS;
+        }
+        else
+        {
+          String *ptr = &data.strings[position];
+          if (BuffSize < ptr->size)
+          {
+            status = BUFFER_TOO_SMALL;
+          }
+          snprintf(buff, BuffSize, "%s", ptr->str);
+        }
+      }
+    }
+  }
+  Log_Result(__FUNCTION__, status);
+  return status;
+}
+
+DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
+{
+  DSError status = SUCCESS;
+  if (!string)
+  {
+    status = POINTER_ERROR;
+  }
+  else
+  {
+    if (id >= DC_ID_MAX)
+    {
+      status = OUT_OF_BOUNDS;
+    }
+    else
+    {
+      DS_DATA element = Get_Element_By_Id(id);
+
+      if (element.type != TYPE_STRING_LIST)
+      {
+        status = TYPE_ERROR;
+      }
+      else
+      {
+        STRING_LIST data = *(STRING_LIST *)element.data;
+        if (position >= data.size)
+        {
+          status = OUT_OF_BOUNDS;
+        }
+        else
+        {
+          String *ptr = &data.strings[position];
+          if (strlen(string) > ptr->size)
+          {
+            status = BUFFER_TOO_BIG;
+          }
+          snprintf(ptr->str, ptr->size, "%s", string);
+        }
       }
     }
   }
