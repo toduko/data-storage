@@ -12,4 +12,8 @@ DSError DS_WriteInt(const DSID id, const S32 value);
 
 DSError DS_WriteString(const DSID id, char *string);
 
+DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value);
+
+DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value);
+
 #endif

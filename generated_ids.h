@@ -7,6 +7,8 @@ typedef enum
     CLUTCH,
     GEAR_BOX,
     ENGINE,
+    WHEEL,
+    SUSPENSION,
     DC_ID_MAX
 } DSID;
 

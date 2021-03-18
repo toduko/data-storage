@@ -22,7 +22,7 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     {
       DS_DATA element = Get_Element_By_Id(id);
 
-      if (element.type == TYPE_STRING)
+      if (element.type == TYPE_STRING || element.type == TYPE_INT_LIST || element.type == TYPE_STRING_LIST)
       {
         status = TYPE_ERROR;
         *value = 0;
@@ -113,7 +113,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     DS_DATA element = Get_Element_By_Id(id);
 
-    if (element.type == TYPE_STRING)
+    if (element.type == TYPE_STRING || element.type == TYPE_INT_LIST || element.type == TYPE_STRING_LIST)
     {
       status = TYPE_ERROR;
     }
@@ -187,6 +187,76 @@ DSError DS_WriteString(const DSID id, char *string)
           status = BUFFER_TOO_BIG;
         }
         snprintf(ptr->str, ptr->size, "%s", string);
+      }
+    }
+  }
+  Log_Result(__FUNCTION__, status);
+  return status;
+}
+
+DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
+{
+  DSError status = SUCCESS;
+  if (!value)
+  {
+    status = POINTER_ERROR;
+  }
+  else
+  {
+    if (id >= DC_ID_MAX)
+    {
+      status = OUT_OF_BOUNDS;
+    }
+    else
+    {
+      DS_DATA element = Get_Element_By_Id(id);
+      if (element.type != TYPE_INT_LIST)
+      {
+        status = TYPE_ERROR;
+      }
+      else
+      {
+        INT_LIST data = *(INT_LIST *)element.data;
+        if (position >= data.size)
+        {
+          status = OUT_OF_BOUNDS;
+        }
+        else
+        {
+          *value = data.values[position];
+        }
+      }
+    }
+  }
+  Log_Result(__FUNCTION__, status);
+  return status;
+}
+
+DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
+{
+  DSError status = SUCCESS;
+
+  if (id >= DC_ID_MAX)
+  {
+    status = OUT_OF_BOUNDS;
+  }
+  else
+  {
+    DS_DATA element = Get_Element_By_Id(id);
+    if (element.type != TYPE_INT_LIST)
+    {
+      status = TYPE_ERROR;
+    }
+    else
+    {
+      INT_LIST data = *(INT_LIST *)element.data;
+      if (position >= data.size)
+      {
+        status = OUT_OF_BOUNDS;
+      }
+      else
+      {
+        data.values[position] = value;
       }
     }
   }

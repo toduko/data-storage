@@ -26,6 +26,8 @@ typedef uint8_t U8;
 #define TYPE_S16 1
 #define TYPE_S8 2
 #define TYPE_STRING 3
+#define TYPE_INT_LIST 4
+#define TYPE_STRING_LIST 5
 
 #define MAX_STR_SIZE 256
 
@@ -49,7 +51,19 @@ typedef struct
 typedef struct
 {
   U8 size;
+  S32 *values;
+} INT_LIST;
+
+typedef struct
+{
+  U8 size;
   char *str;
 } String;
+
+typedef struct
+{
+  U8 size;
+  String *strings;
+} STRING_LIST;
 
 #endif
