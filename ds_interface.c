@@ -215,14 +215,14 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
       }
       else
       {
-        INT_LIST data = *(INT_LIST *)element.data;
-        if (position >= data.size)
+        INT_LIST *data = element.data;
+        if (position >= data->size)
         {
           status = OUT_OF_BOUNDS;
         }
         else
         {
-          *value = data.values[position];
+          *value = data->values[position];
         }
       }
     }
@@ -248,14 +248,14 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
     }
     else
     {
-      INT_LIST data = *(INT_LIST *)element.data;
-      if (position >= data.size)
+      INT_LIST *data = element.data;
+      if (position >= data->size)
       {
         status = OUT_OF_BOUNDS;
       }
       else
       {
-        data.values[position] = value;
+        data->values[position] = value;
       }
     }
   }
