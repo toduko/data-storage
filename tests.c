@@ -39,7 +39,13 @@ void Test_ReadWriteInt(void)
         S32 val_to_write = i * 10;
 
         status = DS_WriteInt(i, val_to_write);
-        if (element.type != TYPE_STRING && element.type != TYPE_INT_LIST && element.type != TYPE_STRING_LIST)
+        if (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
+        {
+            TEST_CHECK(status == TYPE_ERROR);
+            TEST_MSG("Expected: %d", TYPE_ERROR);
+            TEST_MSG("Produced: %d", status);
+        }
+        else
         {
             TEST_CHECK(status == SUCCESS);
             TEST_MSG("Expected: %d", SUCCESS);
@@ -71,14 +77,9 @@ void Test_ReadWriteInt(void)
                 TEST_MSG("Produced: %d", status);
             }
         }
-        else
-        {
-            TEST_CHECK(status == TYPE_ERROR);
-            TEST_MSG("Expected: %d", TYPE_ERROR);
-            TEST_MSG("Produced: %d", status);
-        }
+
         status = DS_ReadInt(i, &s32Data);
-        if (element.type != TYPE_STRING && element.type != TYPE_INT_LIST && element.type != TYPE_STRING_LIST)
+        if (element.type == TYPE_S32 || element.type == TYPE_S16 || element.type == TYPE_S8)
         {
             TEST_CHECK(status != TYPE_ERROR);
             TEST_MSG("Expected: != %d", TYPE_ERROR);
@@ -177,9 +178,9 @@ void Test_ReadWriteIntList(void)
         Print_Case_Number(i);
         DS_DATA element = Get_Element_By_Id(i);
 
-        if (element.type == TYPE_INT_LIST)
+        if (element.type == TYPE_S32_LIST)
         {
-            INT_LIST data = *(INT_LIST *)element.data;
+            S32_LIST data = *(S32_LIST *)element.data;
             U8 pos;
             for (pos = 0; pos < data.size; ++pos)
             {
@@ -206,6 +207,88 @@ void Test_ReadWriteIntList(void)
             status = DS_ReadIntList(i, data.size, &s32Data);
             TEST_CHECK(status == OUT_OF_BOUNDS);
             TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+            TEST_MSG("Produced: %d", status);
+        }
+        else if (element.type == TYPE_S16_LIST)
+        {
+            S16_LIST data = *(S16_LIST *)element.data;
+            U8 pos;
+            for (pos = 0; pos < data.size; ++pos)
+            {
+                S32 val_to_write = pos * 10;
+                status = DS_WriteIntList(i, pos, val_to_write);
+                TEST_CHECK(status == SUCCESS);
+                TEST_MSG("Expected: %d", SUCCESS);
+                TEST_MSG("Produced: %d", status);
+
+                status = DS_ReadIntList(i, pos, &s32Data);
+                TEST_CHECK(status == SUCCESS);
+                TEST_MSG("Expected: %d", SUCCESS);
+                TEST_MSG("Produced: %d", status);
+
+                TEST_CHECK(s32Data == val_to_write);
+                TEST_MSG("Expected: %d", val_to_write);
+                TEST_MSG("Produced: %d", s32Data);
+            }
+            status = DS_WriteIntList(i, data.size, 0);
+            TEST_CHECK(status == OUT_OF_BOUNDS);
+            TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+            TEST_MSG("Produced: %d", status);
+
+            status = DS_ReadIntList(i, data.size, &s32Data);
+            TEST_CHECK(status == OUT_OF_BOUNDS);
+            TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+            TEST_MSG("Produced: %d", status);
+
+            status = DS_WriteIntList(i, 0, S16_MAX + 1);
+            TEST_CHECK(status == INT_SIZE_ERROR);
+            TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+            TEST_MSG("Produced: %d", status);
+
+            status = DS_WriteIntList(i, 0, S16_MIN - 1);
+            TEST_CHECK(status == INT_SIZE_ERROR);
+            TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+            TEST_MSG("Produced: %d", status);
+        }
+        else if (element.type == TYPE_S8_LIST)
+        {
+            S8_LIST data = *(S8_LIST *)element.data;
+            U8 pos;
+            for (pos = 0; pos < data.size; ++pos)
+            {
+                S32 val_to_write = pos * 10;
+                status = DS_WriteIntList(i, pos, val_to_write);
+                TEST_CHECK(status == SUCCESS);
+                TEST_MSG("Expected: %d", SUCCESS);
+                TEST_MSG("Produced: %d", status);
+
+                status = DS_ReadIntList(i, pos, &s32Data);
+                TEST_CHECK(status == SUCCESS);
+                TEST_MSG("Expected: %d", SUCCESS);
+                TEST_MSG("Produced: %d", status);
+
+                TEST_CHECK(s32Data == val_to_write);
+                TEST_MSG("Expected: %d", val_to_write);
+                TEST_MSG("Produced: %d", s32Data);
+            }
+            status = DS_WriteIntList(i, data.size, 0);
+            TEST_CHECK(status == OUT_OF_BOUNDS);
+            TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+            TEST_MSG("Produced: %d", status);
+
+            status = DS_ReadIntList(i, data.size, &s32Data);
+            TEST_CHECK(status == OUT_OF_BOUNDS);
+            TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
+            TEST_MSG("Produced: %d", status);
+
+            status = DS_WriteIntList(i, 0, S8_MAX + 1);
+            TEST_CHECK(status == INT_SIZE_ERROR);
+            TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+            TEST_MSG("Produced: %d", status);
+
+            status = DS_WriteIntList(i, 0, S8_MIN - 1);
+            TEST_CHECK(status == INT_SIZE_ERROR);
+            TEST_MSG("Expected: %d", INT_SIZE_ERROR);
             TEST_MSG("Produced: %d", status);
         }
         else
@@ -247,7 +330,7 @@ void Test_ReadWriteStringList(void)
             U8 pos;
             for (pos = 0; pos < data.size; ++pos)
             {
-                char str_to_write[data.strings[pos].size];
+                char str_to_write[data.max_str_size];
                 sprintf(str_to_write, "%d", pos * 10);
 
                 status = DS_WriteStringList(i, pos, str_to_write);
