@@ -24,8 +24,8 @@ String ENGINE_Data = {.size = ENGINE_Size, .str = ENGINE_Str};
 */
 
 #define WHEEL_Size 3
-S32 WHEEL_Values[WHEEL_Size] = {1, 2, 3};
-INT_LIST WHEEL_Data = {.size = WHEEL_Size, .values = WHEEL_Values};
+S8 WHEEL_Values[WHEEL_Size] = {1, 2, 3};
+S8_LIST WHEEL_Data = {.size = WHEEL_Size, .values = WHEEL_Values};
 
 /*
 ** STRING LISTS
@@ -48,7 +48,7 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_S8, .data = &CLUTCH_Data},
     {.type = TYPE_S16, .data = &GEAR_BOX_Data},
     {.type = TYPE_STRING, .data = &ENGINE_Data},
-    {.type = TYPE_INT_LIST, .data = &WHEEL_Data},
+    {.type = TYPE_S8_LIST, .data = &WHEEL_Data},
     {.type = TYPE_STRING_LIST, .data = &SUSPENSION_Data},
 };
 

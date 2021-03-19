@@ -22,10 +22,9 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     {
       DS_DATA element = Get_Element_By_Id(id);
 
-      if (element.type == TYPE_STRING || element.type == TYPE_INT_LIST || element.type == TYPE_STRING_LIST)
+      if (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
       {
         status = TYPE_ERROR;
-        *value = 0;
       }
       else
       {
@@ -112,7 +111,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     DS_DATA element = Get_Element_By_Id(id);
 
-    if (element.type == TYPE_STRING || element.type == TYPE_INT_LIST || element.type == TYPE_STRING_LIST)
+    if (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
     {
       status = TYPE_ERROR;
     }
@@ -209,20 +208,68 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (element.type != TYPE_INT_LIST)
+      if (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
       {
         status = TYPE_ERROR;
       }
       else
       {
-        INT_LIST *data = element.data;
-        if (position >= data->size)
+        S32 el_val;
+        if (element.type == TYPE_S32_LIST)
         {
-          status = OUT_OF_BOUNDS;
+          S32_LIST *data = element.data;
+          if (position >= data->size)
+          {
+            status = OUT_OF_BOUNDS;
+          }
+          else
+          {
+            *value = data->values[position];
+          }
         }
-        else
+
+        if (element.type == TYPE_S16_LIST)
         {
-          *value = data->values[position];
+          S16_LIST *data = element.data;
+          S16 val = data->values[position];
+          if (position >= data->size)
+          {
+            status = OUT_OF_BOUNDS;
+          }
+          else
+          {
+            if (Is_Big_Endian())
+            {
+              el_val = ((S8 *)&val)[0] << 24 | (((S8 *)&val)[1] << 16);
+            }
+            else
+            {
+              el_val = ((S8 *)&val)[0] << 0 | (((S8 *)&val)[1] << 8);
+            }
+            *value = el_val;
+          }
+        }
+
+        if (element.type == TYPE_S8_LIST)
+        {
+          S8_LIST *data = element.data;
+          S8 val = data->values[position];
+          if (position >= data->size)
+          {
+            status = OUT_OF_BOUNDS;
+          }
+          else
+          {
+            if (Is_Big_Endian())
+            {
+              el_val = ((S8 *)&val)[0] << 24;
+            }
+            else
+            {
+              el_val = ((S8 *)&val)[0] << 0;
+            }
+            *value = el_val;
+          }
         }
       }
     }
@@ -242,20 +289,67 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   else
   {
     DS_DATA element = Get_Element_By_Id(id);
-    if (element.type != TYPE_INT_LIST)
+    if (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
     {
       status = TYPE_ERROR;
     }
     else
     {
-      INT_LIST *data = element.data;
-      if (position >= data->size)
+      if (element.type == TYPE_S32_LIST)
       {
-        status = OUT_OF_BOUNDS;
+        S32_LIST *data = element.data;
+        if (position >= data->size)
+        {
+          status = OUT_OF_BOUNDS;
+        }
+        else
+        {
+          data->values[position] = value;
+        }
       }
-      else
+
+      if (element.type == TYPE_S16_LIST)
       {
-        data->values[position] = value;
+        S16_LIST *data = element.data;
+        if (position >= data->size)
+        {
+          status = OUT_OF_BOUNDS;
+        }
+        else
+        {
+          if (value > S16_MAX || value < S16_MIN)
+          {
+            status = INT_SIZE_ERROR;
+          }
+          else
+          {
+            S16 s16arr[2];
+            S32_To_S16_Lit_End(value, s16arr);
+            data->values[position] = s16arr[0] | s16arr[1];
+          }
+        }
+      }
+
+      if (element.type == TYPE_S8_LIST)
+      {
+        S8_LIST *data = element.data;
+        if (position >= data->size)
+        {
+          status = OUT_OF_BOUNDS;
+        }
+        else
+        {
+          if (value > S8_MAX || value < S8_MIN)
+          {
+            status = INT_SIZE_ERROR;
+          }
+          else
+          {
+            S8 s8arr[4];
+            S32_To_S8_Lit_End(value, s8arr);
+            data->values[position] = s8arr[0] | s8arr[3];
+          }
+        }
       }
     }
   }
