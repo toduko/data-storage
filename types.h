@@ -63,7 +63,8 @@ typedef struct
 typedef struct
 {
   U8 size;
-  String *strings;
+  U8 max_str_size;
+  char *strings[];
 } STRING_LIST;
 
 #endif

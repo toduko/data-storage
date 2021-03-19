@@ -247,7 +247,7 @@ void Test_ReadWriteStringList(void)
             U8 pos;
             for (pos = 0; pos < data.size; ++pos)
             {
-                char str_to_write[data.strings[pos].size];
+                char str_to_write[data.max_str_size];
                 sprintf(str_to_write, "%d", pos * 10);
 
                 status = DS_WriteStringList(i, pos, str_to_write);

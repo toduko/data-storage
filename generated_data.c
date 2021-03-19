@@ -32,15 +32,12 @@ INT_LIST WHEEL_Data = {.size = WHEEL_Size, .values = WHEEL_Values};
 */
 
 #define SUSPENSION_Size 2
+#define SUSPENSION_MAX_STR_Size 5
 
-#define SUSPENSION_Str1_Size 5
-char SUSPENSION_Str1[SUSPENSION_Str1_Size];
+char SUSPENSION_Str1[SUSPENSION_MAX_STR_Size];
+char SUSPENSION_Str2[SUSPENSION_MAX_STR_Size];
 
-#define SUSPENSION_Str2_Size 5
-char SUSPENSION_Str2[SUSPENSION_Str1_Size];
-
-String strings[SUSPENSION_Size] = {{.size = SUSPENSION_Str1_Size, .str = SUSPENSION_Str1}, {.size = SUSPENSION_Str2_Size, .str = SUSPENSION_Str2}};
-STRING_LIST SUSPENSION_Data = {.size = SUSPENSION_Size, .strings = strings};
+STRING_LIST SUSPENSION_Data = {.size = SUSPENSION_Size, .strings = {SUSPENSION_Str1, SUSPENSION_Str2}, .max_str_size = SUSPENSION_MAX_STR_Size};
 
 /*
 ** DATA INITIALIZATION

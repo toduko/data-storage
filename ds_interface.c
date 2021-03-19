@@ -285,19 +285,19 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
       }
       else
       {
-        STRING_LIST data = *(STRING_LIST *)element.data;
-        if (position >= data.size)
+        STRING_LIST *data = element.data;
+        if (position >= data->size)
         {
           status = OUT_OF_BOUNDS;
         }
         else
         {
-          String *ptr = &data.strings[position];
-          if (BuffSize < ptr->size)
+          char *ptr = data->strings[position];
+          if (BuffSize < data->max_str_size)
           {
             status = BUFFER_TOO_SMALL;
           }
-          snprintf(buff, BuffSize, "%s", ptr->str);
+          snprintf(buff, BuffSize, "%s", ptr);
         }
       }
     }
@@ -329,19 +329,19 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
       }
       else
       {
-        STRING_LIST data = *(STRING_LIST *)element.data;
-        if (position >= data.size)
+        STRING_LIST *data = element.data;
+        if (position >= data->size)
         {
           status = OUT_OF_BOUNDS;
         }
         else
         {
-          String *ptr = &data.strings[position];
-          if (strlen(string) > ptr->size)
+          char *ptr = data->strings[position];
+          if (strlen(string) > data->max_str_size)
           {
             status = BUFFER_TOO_BIG;
           }
-          snprintf(ptr->str, ptr->size, "%s", string);
+          snprintf(ptr, data->max_str_size, "%s", string);
         }
       }
     }
