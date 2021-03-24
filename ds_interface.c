@@ -22,7 +22,7 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     {
       DS_DATA element = Get_Element_By_Id(id);
 
-      if (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
+      if (Is_Not_Int(element))
       {
         status = TYPE_ERROR;
       }
@@ -81,13 +81,13 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      String *ptr = (String *)element.data;
-      if (element.type != TYPE_STRING)
+      if (Is_Not_String(element))
       {
         status = TYPE_ERROR;
       }
       else
       {
+        String *ptr = (String *)element.data;
         if (BuffSize < ptr->size)
         {
           status = BUFFER_TOO_SMALL;
@@ -111,7 +111,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     DS_DATA element = Get_Element_By_Id(id);
 
-    if (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
+    if (Is_Not_Int(element))
     {
       status = TYPE_ERROR;
     }
@@ -172,14 +172,13 @@ DSError DS_WriteString(const DSID id, char *string)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      String *ptr = (String *)element.data;
-
-      if (element.type != TYPE_STRING)
+      if (Is_Not_String(element))
       {
         status = TYPE_ERROR;
       }
       else
       {
+        String *ptr = (String *)element.data;
         if (strlen(string) > ptr->size)
         {
           status = BUFFER_TOO_BIG;
@@ -208,7 +207,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
+      if (Is_Not_IntList(element))
       {
         status = TYPE_ERROR;
       }
@@ -289,7 +288,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   else
   {
     DS_DATA element = Get_Element_By_Id(id);
-    if (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
+    if (Is_Not_IntList(element))
     {
       status = TYPE_ERROR;
     }
@@ -373,7 +372,7 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (element.type != TYPE_STRING_LIST)
+      if (Is_Not_StringList(element))
       {
         status = TYPE_ERROR;
       }
@@ -417,7 +416,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     {
       DS_DATA element = Get_Element_By_Id(id);
 
-      if (element.type != TYPE_STRING_LIST)
+      if (Is_Not_StringList(element))
       {
         status = TYPE_ERROR;
       }

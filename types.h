@@ -81,4 +81,13 @@ typedef struct
   char *strings[];
 } STRING_LIST;
 
+#define Is_Int(element) (element.type == TYPE_S32 || element.type == TYPE_S16 || element.type == TYPE_S8)
+#define Is_Not_Int(element) (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
+#define Is_String(element) (element.type == TYPE_STRING)
+#define Is_Not_String(element) (element.type != TYPE_STRING)
+#define Is_IntList(element) (element.type == TYPE_S32_LIST || element.type == TYPE_S16_LIST || element.type == TYPE_S8_LIST)
+#define Is_Not_IntList(element) (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
+#define Is_StringList(element) (element.type == TYPE_STRING_LIST)
+#define Is_Not_StringList(element) (element.type != TYPE_STRING_LIST)
+
 #endif
