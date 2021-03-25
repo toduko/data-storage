@@ -33,9 +33,9 @@ void Log_Result(const char *name, const DSError status)
     color = RED;
     result = "TYPE_ERROR";
     break;
-  case INT_SIZE_ERROR:
+  case INT_VALUE_OVERFLOW:
     color = RED;
-    result = "INT_SIZE_ERROR";
+    result = "INT_VALUE_OVERFLOW";
     break;
   }
   printf("%s result: %s%s%s\n", name, color, result, RESET);

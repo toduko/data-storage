@@ -34,10 +34,9 @@ S8_LIST WHEEL_Data = {.size = WHEEL_Size, .values = WHEEL_Values};
 #define SUSPENSION_Size 2
 #define SUSPENSION_MAX_STR_Size 5
 
-char SUSPENSION_Str1[SUSPENSION_MAX_STR_Size];
-char SUSPENSION_Str2[SUSPENSION_MAX_STR_Size];
+char SUSPENSION_Strings[SUSPENSION_Size * SUSPENSION_MAX_STR_Size];;
 
-STRING_LIST SUSPENSION_Data = {.size = SUSPENSION_Size, .strings = {SUSPENSION_Str1, SUSPENSION_Str2}, .max_str_size = SUSPENSION_MAX_STR_Size};
+STRING_LIST SUSPENSION_Data = {.size = SUSPENSION_Size, .strings = SUSPENSION_Strings, .max_str_size = SUSPENSION_MAX_STR_Size};
 
 /*
 ** DATA INITIALIZATION
