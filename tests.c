@@ -54,26 +54,26 @@ void Test_ReadWriteInt(void)
             if (element.type == TYPE_S16)
             {
                 status = DS_WriteInt(i, S16_MAX + 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
 
                 status = DS_WriteInt(i, S16_MIN - 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
             }
 
             if (element.type == TYPE_S8)
             {
                 status = DS_WriteInt(i, S8_MAX + 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
 
                 status = DS_WriteInt(i, S8_MIN - 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
             }
         }
@@ -238,13 +238,13 @@ void Test_ReadWriteIntList(void)
                 TEST_MSG("Produced: %d", status);
 
                 status = DS_WriteIntList(i, 0, S16_MAX + 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
 
                 status = DS_WriteIntList(i, 0, S16_MIN - 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
             }
             if (element.type == TYPE_S8_LIST)
@@ -279,13 +279,13 @@ void Test_ReadWriteIntList(void)
                 TEST_MSG("Produced: %d", status);
 
                 status = DS_WriteIntList(i, 0, S8_MAX + 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
 
                 status = DS_WriteIntList(i, 0, S8_MIN - 1);
-                TEST_CHECK(status == INT_SIZE_ERROR);
-                TEST_MSG("Expected: %d", INT_SIZE_ERROR);
+                TEST_CHECK(status == INT_VALUE_OVERFLOW);
+                TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
             }
         }

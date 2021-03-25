@@ -41,7 +41,7 @@ typedef enum
   BUFFER_TOO_BIG,
   POINTER_ERROR,
   TYPE_ERROR,
-  INT_SIZE_ERROR
+  INT_VALUE_OVERFLOW
 } DSError;
 
 typedef struct
@@ -89,5 +89,8 @@ typedef struct
 #define Is_Not_IntList(element) (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
 #define Is_StringList(element) (element.type == TYPE_STRING_LIST)
 #define Is_Not_StringList(element) (element.type != TYPE_STRING_LIST)
+
+#define Is_Not_In_S16_Bounds(value) (value > S16_MAX || value < S16_MIN)
+#define Is_Not_In_S8_Bounds(value) (value > S8_MAX || value < S8_MIN)
 
 #endif

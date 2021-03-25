@@ -124,9 +124,9 @@ DSError DS_WriteInt(const DSID id, const S32 value)
       }
       if (element.type == TYPE_S16)
       {
-        if (value > S16_MAX || value < S16_MIN)
+        if (Is_Not_In_S16_Bounds(value))
         {
-          status = INT_SIZE_ERROR;
+          status = INT_VALUE_OVERFLOW;
         }
         else
         {
@@ -138,9 +138,9 @@ DSError DS_WriteInt(const DSID id, const S32 value)
       }
       if (element.type == TYPE_S8)
       {
-        if (value > S8_MAX || value < S8_MIN)
+        if (Is_Not_In_S8_Bounds(value))
         {
-          status = INT_SIZE_ERROR;
+          status = INT_VALUE_OVERFLOW;
         }
         else
         {
@@ -316,9 +316,9 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
         }
         else
         {
-          if (value > S16_MAX || value < S16_MIN)
+          if (Is_Not_In_S16_Bounds(value))
           {
-            status = INT_SIZE_ERROR;
+            status = INT_VALUE_OVERFLOW;
           }
           else
           {
@@ -338,9 +338,9 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
         }
         else
         {
-          if (value > S8_MAX || value < S8_MIN)
+          if (Is_Not_In_S8_Bounds(value))
           {
-            status = INT_SIZE_ERROR;
+            status = INT_VALUE_OVERFLOW;
           }
           else
           {
