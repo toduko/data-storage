@@ -78,7 +78,7 @@ typedef struct
 {
   U8 size;
   U8 max_str_size;
-  char *strings[];
+  char *strings;
 } STRING_LIST;
 
 #define Is_Int(element) (element.type == TYPE_S32 || element.type == TYPE_S16 || element.type == TYPE_S8)

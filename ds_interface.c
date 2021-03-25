@@ -385,7 +385,7 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
         }
         else
         {
-          char *ptr = data->strings[position];
+          char *ptr = &data->strings[position * data->max_str_size];
           if (BuffSize < data->max_str_size)
           {
             status = BUFFER_TOO_SMALL;
@@ -429,7 +429,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
         }
         else
         {
-          char *ptr = data->strings[position];
+          char *ptr = &data->strings[position * data->max_str_size];
           if (strlen(string) > data->max_str_size)
           {
             status = BUFFER_TOO_BIG;
