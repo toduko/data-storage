@@ -11,14 +11,12 @@
 
 void Log_Result(const char *name, const DSError status);
 
-void S32_To_S8_Lit_End(S32 src, S8 *dest);
+S8 S32_To_S8(S32 value);
 
-S32 S8_To_S32_Lit_End(S8 *src);
+S32 S8_To_S32(S8 value);
 
-void S32_To_S16_Lit_End(S32 src, S16 *dest);
+S16 S32_To_S16(S32 value);
 
-S16 S16_To_S32_Lit_End(S16 *src);
-
-U8 Is_Big_Endian();
+S32 S16_To_S32(S16 value);
 
 #endif
