@@ -42,34 +42,10 @@ void Log_Result(const char *name, const DSError status)
 #endif
 }
 
-void S32_To_S8_Lit_End(S32 src, S8 *dest)
-{
-  dest[0] = (S8)(src >> 0);
-  dest[1] = (S8)(src >> 8);
-  dest[2] = (S8)(src >> 16);
-  dest[3] = (S8)(src >> 24);
-}
-
-S32 S8_To_S32_Lit_End(S8 *src)
-{
-  return (S32)src[0] << 0 | (S32)src[1] << 8 | (S32)src[2] << 16 | (S32)src[3] << 24;
-}
-
-void S32_To_S16_Lit_End(S32 src, S16 *dest)
-{
-  dest[0] = (S16)(src >> 0);
-  dest[1] = (S16)(src >> 16);
-}
-
-S16 S16_To_S32_Lit_End(S16 *src)
-{
-  return (S32)src[0] << 0 | (S32)src[1] << 16;
-}
-
 U8 Is_Big_Endian()
 {
   unsigned int i = 1;
-  char *c = (char*)&i;
+  char *c = (char *)&i;
   if (*c)
   {
     return 0;
@@ -77,5 +53,58 @@ U8 Is_Big_Endian()
   else
   {
     return 1;
+  }
+}
+
+void S32_To_S8_Array_Lit_End(S32 src, S8 *dest)
+{
+  dest[0] = (S8)(src >> 0);
+  dest[1] = (S8)(src >> 8);
+  dest[2] = (S8)(src >> 16);
+  dest[3] = (S8)(src >> 24);
+}
+
+void S32_To_S16_Array_Lit_End(S32 src, S16 *dest)
+{
+  dest[0] = (S16)(src >> 0);
+  dest[1] = (S16)(src >> 16);
+}
+
+S8 S32_To_S8(S32 value)
+{
+  S8 s8arr[4];
+  S32_To_S8_Array_Lit_End(value, s8arr);
+  return s8arr[0] | s8arr[3];
+}
+
+S32 S8_To_S32(S8 value)
+{
+  if (Is_Big_Endian())
+  {
+    return (S32)value << 24;
+  }
+  else
+  {
+    return (S32)value << 0;
+  }
+}
+
+S16 S32_To_S16(S32 value)
+{
+  S16 s16arr[2];
+  S32_To_S16_Array_Lit_End(value, s16arr);
+
+  return s16arr[0] | s16arr[1];
+}
+
+S32 S16_To_S32(S16 value)
+{
+  if (Is_Big_Endian())
+  {
+    return (S32)value << 16;
+  }
+  else
+  {
+    return (S32)value << 0;
   }
 }

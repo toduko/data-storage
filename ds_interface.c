@@ -28,35 +28,17 @@ DSError DS_ReadInt(const DSID id, S32 *value)
       }
       else
       {
-        S32 el_val;
         if (element.type == TYPE_S32)
         {
-          el_val = *((S32 *)element.data);
-          *value = el_val;
+          *value = *((S32 *)element.data);
         }
         if (element.type == TYPE_S16)
         {
-          if (Is_Big_Endian())
-          {
-            el_val = ((S8 *)element.data)[0] << 24 | (((S8 *)element.data)[1] << 16);
-          }
-          else
-          {
-            el_val = ((S8 *)element.data)[0] << 0 | (((S8 *)element.data)[1] << 8);
-          }
-          *value = el_val;
+          *value = S16_To_S32(*(S16 *)element.data);
         }
         if (element.type == TYPE_S8)
         {
-          if (Is_Big_Endian())
-          {
-            el_val = ((S8 *)element.data)[0] << 24;
-          }
-          else
-          {
-            el_val = ((S8 *)element.data)[0] << 0;
-          }
-          *value = el_val;
+          *value = S8_To_S32(*(S8 *)element.data);
         }
       }
     }
@@ -131,9 +113,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S16 *ptr = (S16 *)element.data;
-          S16 s16arr[2];
-          S32_To_S16_Lit_End(value, s16arr);
-          *ptr = s16arr[0] | s16arr[1];
+          *ptr = S32_To_S16(value);
         }
       }
       if (element.type == TYPE_S8)
@@ -145,9 +125,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S8 *ptr = (S8 *)element.data;
-          S8 s8arr[4];
-          S32_To_S8_Lit_End(value, s8arr);
-          *ptr = s8arr[0] | s8arr[3];
+          *ptr = S32_To_S8(value);
         }
       }
     }
@@ -213,7 +191,6 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
       }
       else
       {
-        S32 el_val;
         if (element.type == TYPE_S32_LIST)
         {
           S32_LIST *data = element.data;
@@ -237,15 +214,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
           }
           else
           {
-            if (Is_Big_Endian())
-            {
-              el_val = ((S8 *)&val)[0] << 24 | (((S8 *)&val)[1] << 16);
-            }
-            else
-            {
-              el_val = ((S8 *)&val)[0] << 0 | (((S8 *)&val)[1] << 8);
-            }
-            *value = el_val;
+            *value = S16_To_S32(val);
           }
         }
 
@@ -259,15 +228,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
           }
           else
           {
-            if (Is_Big_Endian())
-            {
-              el_val = ((S8 *)&val)[0] << 24;
-            }
-            else
-            {
-              el_val = ((S8 *)&val)[0] << 0;
-            }
-            *value = el_val;
+            *value = S8_To_S32(val);
           }
         }
       }
@@ -322,9 +283,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            S16 s16arr[2];
-            S32_To_S16_Lit_End(value, s16arr);
-            data->values[position] = s16arr[0] | s16arr[1];
+            data->values[position] = S32_To_S16(value);
           }
         }
       }
@@ -344,9 +303,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            S8 s8arr[4];
-            S32_To_S8_Lit_End(value, s8arr);
-            data->values[position] = s8arr[0] | s8arr[3];
+            data->values[position] = S32_To_S8(value);
           }
         }
       }
