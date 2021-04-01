@@ -150,7 +150,7 @@ DSError DS_WriteString(const DSID id, char *string)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_String(element))
+      if (Is_Not_WritableString(element))
       {
         status = TYPE_ERROR;
       }

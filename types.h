@@ -30,6 +30,7 @@ typedef uint8_t U8;
 #define TYPE_S16_LIST 5
 #define TYPE_S8_LIST 6
 #define TYPE_STRING_LIST 7
+#define TYPE_STATIC_STRING 8
 
 #define MAX_STR_SIZE 256
 
@@ -81,10 +82,19 @@ typedef struct
   char *strings;
 } STRING_LIST;
 
+typedef enum
+{
+  BULGARIAN,
+  ENGLISH,
+  NUM_LANGUAGES
+} Language;
+
 #define Is_Int(element) (element.type == TYPE_S32 || element.type == TYPE_S16 || element.type == TYPE_S8)
 #define Is_Not_Int(element) (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
-#define Is_String(element) (element.type == TYPE_STRING)
-#define Is_Not_String(element) (element.type != TYPE_STRING)
+#define Is_String(element) (element.type == TYPE_STRING || element.type == TYPE_STATIC_STRING)
+#define Is_Not_String(element) (element.type != TYPE_STRING && element.type != TYPE_STATIC_STRING)
+#define Is_WritableString(element) (element.type == TYPE_STRING)
+#define Is_Not_WritableString(element) (element.type != TYPE_STRING)
 #define Is_IntList(element) (element.type == TYPE_S32_LIST || element.type == TYPE_S16_LIST || element.type == TYPE_S8_LIST)
 #define Is_Not_IntList(element) (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
 #define Is_StringList(element) (element.type == TYPE_STRING_LIST)
