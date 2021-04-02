@@ -20,4 +20,6 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value);
 
 DSError DS_WriteStringList(const DSID id, const U8 position, char *string);
 
+void DS_SetLanguage(Language NewLang);
+
 #endif

@@ -6,6 +6,4 @@
 
 DS_DATA Get_Element_By_Id(DSID id);
 
-void DS_SetLanguage(Language NewLang);
-
 #endif

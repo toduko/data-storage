@@ -4,6 +4,8 @@
 #include <math.h>
 #include <string.h>
 
+Language language = ENGLISH;
+
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
   DSError status = SUCCESS;
@@ -69,12 +71,24 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
       }
       else
       {
-        String *ptr = (String *)element.data;
-        if (BuffSize < ptr->size)
+        if (Is_Not_StaticString(element))
         {
-          status = BUFFER_TOO_SMALL;
+          String *ptr = (String *)element.data;
+          if (BuffSize < ptr->size)
+          {
+            status = BUFFER_TOO_SMALL;
+          }
+          snprintf(buff, BuffSize, "%s", ptr->str);
         }
-        snprintf(buff, BuffSize, "%s", ptr->str);
+        else
+        {
+          String *ptr = (String *)element.data;
+          if (BuffSize < ptr[language].size)
+          {
+            status = BUFFER_TOO_SMALL;
+          }
+          snprintf(buff, BuffSize, "%s", ptr[language].str);
+        }
       }
     }
   }
@@ -398,4 +412,9 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
   }
   Log_Result(__FUNCTION__, status);
   return status;
+}
+
+void DS_SetLanguage(Language NewLang)
+{
+  language = NewLang;
 }

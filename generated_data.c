@@ -15,9 +15,7 @@ S16 GEAR_BOX_Data;
 char BRAKE_PEDAL_Str[BRAKE_PEDAL_Size] = "BRK";
 String BRAKE_PEDAL_Data = {.size = BRAKE_PEDAL_Size, .str = BRAKE_PEDAL_Str};
 
-#define SPEED_Size 5
-static char SPEED_Str[SPEED_Size] = "km/h";
-static String SPEED_Data = {.size = SPEED_Size, .str = SPEED_Str};
+String SPEED_Data[NUM_LANGUAGES] = {{.size = 8, .str = "км/ч"}, {.size = 5, .str = "km/h"}};
 
 #define ENGINE_Size 10
 char ENGINE_Str[ENGINE_Size] = "ENG";
@@ -43,12 +41,6 @@ char SUSPENSION_Strings[SUSPENSION_Size * SUSPENSION_MAX_STR_Size];
 STRING_LIST SUSPENSION_Data = {.size = SUSPENSION_Size, .strings = SUSPENSION_Strings, .max_str_size = SUSPENSION_MAX_STR_Size};
 
 /*
-** LANGUAGE
-*/
-
-static Language language = ENGLISH;
-
-/*
 ** DATA INITIALIZATION
 */
 
@@ -64,20 +56,4 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
 DS_DATA Get_Element_By_Id(DSID id)
 {
     return DS_GENERATED_DATA[id];
-}
-
-void DS_SetLanguage(Language NewLang)
-{
-    language = NewLang;
-    String *data = (String *)DS_GENERATED_DATA[SPEED].data;
-    switch (NewLang)
-    {
-    case BULGARIAN:
-        data->str = "км/ч";
-        break;
-
-    case ENGLISH:
-        data->str = "km/h";
-        break;
-    }
 }
