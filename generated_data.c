@@ -15,7 +15,7 @@ S16 GEAR_BOX_Data;
 char BRAKE_PEDAL_Str[BRAKE_PEDAL_Size] = "BRK";
 String BRAKE_PEDAL_Data = {.size = BRAKE_PEDAL_Size, .str = BRAKE_PEDAL_Str};
 
-String SPEED_Data[NUM_LANGUAGES] = {{.size = 8, .str = "км/ч"}, {.size = 5, .str = "km/h"}};
+const String SPEED_Data[NUM_LANGUAGES] = {{.size = 8, .str = "км/ч"}, {.size = 5, .str = "km/h"}};
 
 #define ENGINE_Size 10
 char ENGINE_Str[ENGINE_Size] = "ENG";
@@ -51,7 +51,7 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_STRING, .data = &ENGINE_Data},
     {.type = TYPE_S8_LIST, .data = &WHEEL_Data},
     {.type = TYPE_STRING_LIST, .data = &SUSPENSION_Data},
-    {.type = TYPE_STATIC_STRING, .data = &SPEED_Data}};
+    {.type = TYPE_STATIC_STRING, .const_data = SPEED_Data}};
 
 DS_DATA Get_Element_By_Id(DSID id)
 {

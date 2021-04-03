@@ -48,7 +48,11 @@ typedef enum
 typedef struct
 {
   U8 type;
-  void *data;
+  union
+  {
+    void *data;
+    const void *const_data;
+  };
 } DS_DATA;
 
 typedef struct
