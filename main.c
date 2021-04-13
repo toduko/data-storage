@@ -8,9 +8,7 @@ int main(int argc, char *argv[])
 #ifdef DEBUG
   printf("DEBUG ENABLED\n");
 #endif
-  char str[MAX_STR_SIZE];
-  DS_ReadString(SPEED, str, sizeof(str));
-  printf("%s\n", str);
+
   while (1)
   {
     /*Main loop where data is interacted with*/

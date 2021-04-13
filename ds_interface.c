@@ -42,6 +42,18 @@ DSError DS_ReadInt(const DSID id, S32 *value)
         {
           *value = S8_To_S32(*(S8 *)element.data);
         }
+        if (element.type == TYPE_STATIC_S32)
+        {
+          *value = ((S32 *)element.data)[language];
+        }
+        if (element.type == TYPE_STATIC_S16)
+        {
+          *value = S16_To_S32(((S16 *)element.data)[language]);
+        }
+        if (element.type == TYPE_STATIC_S8)
+        {
+          *value = S8_To_S32(((S8 *)element.data)[language]);
+        }
       }
     }
   }
@@ -107,7 +119,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     DS_DATA element = Get_Element_By_Id(id);
 
-    if (Is_Not_Int(element))
+    if (Is_Not_WritableInt(element))
     {
       status = TYPE_ERROR;
     }

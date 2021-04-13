@@ -38,7 +38,7 @@ void Test_ReadWriteInt(void)
 
         Print_Case(i, "Write");
         status = DS_WriteInt(i, val_to_write);
-        if (Is_Not_Int(element))
+        if (Is_Not_WritableInt(element))
         {
 
             TEST_CHECK(status == TYPE_ERROR);
@@ -86,9 +86,12 @@ void Test_ReadWriteInt(void)
             TEST_MSG("Expected: %d", SUCCESS);
             TEST_MSG("Produced: %d", status);
 
-            TEST_CHECK(s32Data == val_to_write);
-            TEST_MSG("Expected: %d", val_to_write);
-            TEST_MSG("Produced: %d", s32Data);
+            if (Is_WritableInt(element))
+            {
+                TEST_CHECK(s32Data == val_to_write);
+                TEST_MSG("Expected: %d", val_to_write);
+                TEST_MSG("Produced: %d", s32Data);
+            }
         }
         else
         {

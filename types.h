@@ -31,6 +31,9 @@ typedef uint8_t U8;
 #define TYPE_S8_LIST 6
 #define TYPE_STRING_LIST 7
 #define TYPE_STATIC_STRING 8
+#define TYPE_STATIC_S32 9
+#define TYPE_STATIC_S16 10
+#define TYPE_STATIC_S8 11
 
 #define MAX_STR_SIZE 256
 
@@ -93,8 +96,12 @@ typedef enum
   NUM_LANGUAGES
 } Language;
 
-#define Is_Int(element) (element.type == TYPE_S32 || element.type == TYPE_S16 || element.type == TYPE_S8)
-#define Is_Not_Int(element) (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
+#define Is_WritableInt(element) (element.type == TYPE_S32 || element.type == TYPE_S16 || element.type == TYPE_S8)
+#define Is_Not_WritableInt(element) (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
+#define Is_StaticInt(element) (element.type == TYPE_STATIC_S32 || element.type == TYPE_STATIC_S16 || element.type == TYPE_STATIC_S8)
+#define Is_Not_StaticInt(element) (element.type != TYPE_STATIC_S32 && element.type != TYPE_STATIC_S16 && element.type != TYPE_STATIC_S8)
+#define Is_Int(element) (Is_StaticInt(element) || Is_WritableInt(element))
+#define Is_Not_Int(element) (Is_Not_StaticInt(element) && Is_Not_WritableInt(element))
 #define Is_String(element) (element.type == TYPE_STRING || element.type == TYPE_STATIC_STRING)
 #define Is_Not_String(element) (element.type != TYPE_STRING && element.type != TYPE_STATIC_STRING)
 #define Is_WritableString(element) (element.type == TYPE_STRING)

@@ -6,6 +6,7 @@
 
 S8 CLUTCH_Data;
 S16 GEAR_BOX_Data;
+const S16 TIRE_Data[NUM_LANGUAGES] = {10, 20};
 
 /*
 ** STRINGS
@@ -51,7 +52,8 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_STRING, .data = &ENGINE_Data},
     {.type = TYPE_S8_LIST, .data = &WHEEL_Data},
     {.type = TYPE_STRING_LIST, .data = &SUSPENSION_Data},
-    {.type = TYPE_STATIC_STRING, .const_data = SPEED_Data}};
+    {.type = TYPE_STATIC_STRING, .const_data = &SPEED_Data},
+    {.type = TYPE_STATIC_S16, .const_data = &TIRE_Data}};
 
 DS_DATA Get_Element_By_Id(DSID id)
 {
