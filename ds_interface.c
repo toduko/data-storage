@@ -30,15 +30,15 @@ DSError DS_ReadInt(const DSID id, S32 *value)
       }
       else
       {
-        if (element.type == TYPE_S32)
+        if (element.type == TYPE_S32 || element.type == TYPE_STATIC_S32_MONO)
         {
           *value = *((S32 *)element.data);
         }
-        if (element.type == TYPE_S16)
+        if (element.type == TYPE_S16 || element.type == TYPE_STATIC_S16_MONO)
         {
           *value = S16_To_S32(*(S16 *)element.data);
         }
-        if (element.type == TYPE_S8)
+        if (element.type == TYPE_S8 || element.type == TYPE_STATIC_S8_MONO)
         {
           *value = S8_To_S32(*(S8 *)element.data);
         }
@@ -94,12 +94,24 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
         }
         else
         {
-          String *ptr = (String *)element.data;
-          if (BuffSize < ptr[language].size)
+          if (element.type == TYPE_STATIC_STRING)
           {
-            status = BUFFER_TOO_SMALL;
+            String *ptr = (String *)element.data;
+            if (BuffSize < ptr[language].size)
+            {
+              status = BUFFER_TOO_SMALL;
+            }
+            snprintf(buff, BuffSize, "%s", ptr[language].str);
           }
-          snprintf(buff, BuffSize, "%s", ptr[language].str);
+          else
+          {
+            char *ptr = (char *)element.data;
+            if (BuffSize < strlen(ptr))
+            {
+              status = BUFFER_TOO_SMALL;
+            }
+            snprintf(buff, BuffSize, "%s", ptr);
+          }
         }
       }
     }

@@ -34,6 +34,10 @@ typedef uint8_t U8;
 #define TYPE_STATIC_S32 9
 #define TYPE_STATIC_S16 10
 #define TYPE_STATIC_S8 11
+#define TYPE_STATIC_S32_MONO 12
+#define TYPE_STATIC_S16_MONO 13
+#define TYPE_STATIC_S8_MONO 14
+#define TYPE_STATIC_STRING_MONO 15
 
 #define MAX_STR_SIZE 256
 
@@ -97,19 +101,19 @@ typedef enum
 } Language;
 
 #define Is_WritableInt(element) (element.type == TYPE_S32 || element.type == TYPE_S16 || element.type == TYPE_S8)
-#define Is_Not_WritableInt(element) (element.type != TYPE_S32 && element.type != TYPE_S16 && element.type != TYPE_S8)
-#define Is_StaticInt(element) (element.type == TYPE_STATIC_S32 || element.type == TYPE_STATIC_S16 || element.type == TYPE_STATIC_S8)
-#define Is_Not_StaticInt(element) (element.type != TYPE_STATIC_S32 && element.type != TYPE_STATIC_S16 && element.type != TYPE_STATIC_S8)
+#define Is_Not_WritableInt(element) (!Is_WritableInt(element))
+#define Is_StaticInt(element) (element.type == TYPE_STATIC_S32 || element.type == TYPE_STATIC_S32_MONO || element.type == TYPE_STATIC_S16 || element.type == TYPE_STATIC_S16_MONO || element.type == TYPE_STATIC_S8 || element.type == TYPE_STATIC_S8_MONO)
+#define Is_Not_StaticInt(element) (!Is_StaticInt(element))
 #define Is_Int(element) (Is_StaticInt(element) || Is_WritableInt(element))
 #define Is_Not_Int(element) (Is_Not_StaticInt(element) && Is_Not_WritableInt(element))
-#define Is_String(element) (element.type == TYPE_STRING || element.type == TYPE_STATIC_STRING)
-#define Is_Not_String(element) (element.type != TYPE_STRING && element.type != TYPE_STATIC_STRING)
+#define Is_String(element) (element.type == TYPE_STRING || element.type == TYPE_STATIC_STRING || element.type == TYPE_STATIC_STRING_MONO)
+#define Is_Not_String(element) (!Is_String(element))
 #define Is_WritableString(element) (element.type == TYPE_STRING)
 #define Is_Not_WritableString(element) (element.type != TYPE_STRING)
-#define Is_StaticString(element) (element.type == TYPE_STATIC_STRING)
-#define Is_Not_StaticString(element) (element.type != TYPE_STATIC_STRING)
+#define Is_StaticString(element) (element.type == TYPE_STATIC_STRING || element.type == TYPE_STATIC_STRING_MONO)
+#define Is_Not_StaticString(element) (!Is_StaticString(element))
 #define Is_IntList(element) (element.type == TYPE_S32_LIST || element.type == TYPE_S16_LIST || element.type == TYPE_S8_LIST)
-#define Is_Not_IntList(element) (element.type != TYPE_S32_LIST && element.type != TYPE_S16_LIST && element.type != TYPE_S8_LIST)
+#define Is_Not_IntList(element) (!Is_IntList(element))
 #define Is_StringList(element) (element.type == TYPE_STRING_LIST)
 #define Is_Not_StringList(element) (element.type != TYPE_STRING_LIST)
 

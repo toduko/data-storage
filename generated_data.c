@@ -6,7 +6,7 @@
 
 S8 CLUTCH_Data;
 S16 GEAR_BOX_Data;
-const S16 TIRE_Data[NUM_LANGUAGES] = {10, 20};
+const S16 TIRE_Data = 10;
 
 /*
 ** STRINGS
@@ -15,6 +15,7 @@ const S16 TIRE_Data[NUM_LANGUAGES] = {10, 20};
 #define BRAKE_PEDAL_Size 9
 char BRAKE_PEDAL_Str[BRAKE_PEDAL_Size] = "BRK";
 String BRAKE_PEDAL_Data = {.size = BRAKE_PEDAL_Size, .str = BRAKE_PEDAL_Str};
+const char STEERING_Data[] = "STEERING";
 
 const String SPEED_Data[NUM_LANGUAGES] = {{.size = 8, .str = "км/ч"}, {.size = 5, .str = "km/h"}};
 
@@ -53,7 +54,8 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_S8_LIST, .data = &WHEEL_Data},
     {.type = TYPE_STRING_LIST, .data = &SUSPENSION_Data},
     {.type = TYPE_STATIC_STRING, .const_data = &SPEED_Data},
-    {.type = TYPE_STATIC_S16, .const_data = &TIRE_Data}};
+    {.type = TYPE_STATIC_S16_MONO, .const_data = &TIRE_Data},
+    {.type = TYPE_STATIC_STRING_MONO, .const_data = &STEERING_Data}};
 
 DS_DATA Get_Element_By_Id(DSID id)
 {
