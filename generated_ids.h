@@ -9,6 +9,9 @@ typedef enum
     ENGINE,
     WHEEL,
     SUSPENSION,
+    SPEED,
+    TIRE,
+    STEERING,
     DC_ID_MAX
 } DSID;
 

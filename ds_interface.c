@@ -4,6 +4,8 @@
 #include <math.h>
 #include <string.h>
 
+Language language = ENGLISH;
+
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
   DSError status = SUCCESS;
@@ -28,17 +30,29 @@ DSError DS_ReadInt(const DSID id, S32 *value)
       }
       else
       {
-        if (element.type == TYPE_S32)
+        if (element.type == TYPE_S32 || element.type == TYPE_STATIC_S32_MONO)
         {
           *value = *((S32 *)element.data);
         }
-        if (element.type == TYPE_S16)
+        if (element.type == TYPE_S16 || element.type == TYPE_STATIC_S16_MONO)
         {
           *value = S16_To_S32(*(S16 *)element.data);
         }
-        if (element.type == TYPE_S8)
+        if (element.type == TYPE_S8 || element.type == TYPE_STATIC_S8_MONO)
         {
           *value = S8_To_S32(*(S8 *)element.data);
+        }
+        if (element.type == TYPE_STATIC_S32)
+        {
+          *value = ((S32 *)element.data)[language];
+        }
+        if (element.type == TYPE_STATIC_S16)
+        {
+          *value = S16_To_S32(((S16 *)element.data)[language]);
+        }
+        if (element.type == TYPE_STATIC_S8)
+        {
+          *value = S8_To_S32(((S8 *)element.data)[language]);
         }
       }
     }
@@ -69,12 +83,36 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
       }
       else
       {
-        String *ptr = (String *)element.data;
-        if (BuffSize < ptr->size)
+        if (Is_Not_StaticString(element))
         {
-          status = BUFFER_TOO_SMALL;
+          String *ptr = (String *)element.data;
+          if (BuffSize < ptr->size)
+          {
+            status = BUFFER_TOO_SMALL;
+          }
+          snprintf(buff, BuffSize, "%s", ptr->str);
         }
-        snprintf(buff, BuffSize, "%s", ptr->str);
+        else
+        {
+          if (element.type == TYPE_STATIC_STRING)
+          {
+            String *ptr = (String *)element.data;
+            if (BuffSize < ptr[language].size)
+            {
+              status = BUFFER_TOO_SMALL;
+            }
+            snprintf(buff, BuffSize, "%s", ptr[language].str);
+          }
+          else
+          {
+            char *ptr = (char *)element.data;
+            if (BuffSize < strlen(ptr))
+            {
+              status = BUFFER_TOO_SMALL;
+            }
+            snprintf(buff, BuffSize, "%s", ptr);
+          }
+        }
       }
     }
   }
@@ -93,7 +131,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     DS_DATA element = Get_Element_By_Id(id);
 
-    if (Is_Not_Int(element))
+    if (Is_Not_WritableInt(element))
     {
       status = TYPE_ERROR;
     }
@@ -150,7 +188,7 @@ DSError DS_WriteString(const DSID id, char *string)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_String(element))
+      if (Is_Not_WritableString(element))
       {
         status = TYPE_ERROR;
       }
@@ -398,4 +436,9 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
   }
   Log_Result(__FUNCTION__, status);
   return status;
+}
+
+void DS_SetLanguage(Language NewLang)
+{
+  language = NewLang;
 }
