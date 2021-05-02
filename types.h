@@ -49,7 +49,9 @@ typedef enum
   BUFFER_TOO_BIG,
   POINTER_ERROR,
   TYPE_ERROR,
-  INT_VALUE_OVERFLOW
+  INT_VALUE_OVERFLOW,
+  QUEUE_FULL,
+  QUEUE_EMPTY
 } DSError;
 
 typedef struct

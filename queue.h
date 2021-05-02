@@ -1,16 +1,17 @@
 #ifndef QUEUE_H_
 #define QUEUE_H_
 
-#include <stdint.h>
+#include "types.h"
+
 typedef int QUEUE_DATA;
 
 int Is_Empty();
 
 int Is_Full();
 
-void Enqueue(QUEUE_DATA data);
+DSError Enqueue(QUEUE_DATA data);
 
-void Dequeue();
+DSError Dequeue();
 
 QUEUE_DATA Front();
 

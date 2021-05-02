@@ -37,6 +37,14 @@ void Log_Result(const char *name, const DSError status)
     color = RED;
     result = "INT_VALUE_OVERFLOW";
     break;
+  case QUEUE_EMPTY:
+    color = RED;
+    result = "QUEUE_EMPTY";
+    break;
+  case QUEUE_FULL:
+    color = RED;
+    result = "QUEUE_FULL";
+    break;
   }
   printf("%s result: %s%s%s\n", name, color, result, RESET);
 #endif

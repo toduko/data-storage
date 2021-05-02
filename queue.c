@@ -1,4 +1,6 @@
+#include <stdint.h>
 #include "queue.h"
+#include "utils.h"
 
 #define QUEUE_SIZE 17
 
@@ -17,8 +19,10 @@ int Is_Full()
   return (rear + 1) % QUEUE_SIZE == front ? 1 : 0;
 }
 
-void Enqueue(QUEUE_DATA data)
+DSError Enqueue(QUEUE_DATA data)
 {
+  DSError status = SUCCESS;
+
   if (!Is_Full())
   {
     if (Is_Empty())
@@ -32,10 +36,18 @@ void Enqueue(QUEUE_DATA data)
     }
     queue[rear] = data;
   }
+  else
+  {
+    status = QUEUE_FULL;
+  }
+
+  Log_Result(__FUNCTION__, status);
+  return status;
 }
 
-void Dequeue()
+DSError Dequeue()
 {
+  DSError status = SUCCESS;
   if (!Is_Empty())
   {
     if (front == rear)
@@ -48,6 +60,13 @@ void Dequeue()
       front = (front + 1) % QUEUE_SIZE;
     }
   }
+  else
+  {
+    status = QUEUE_EMPTY;
+  }
+
+  Log_Result(__FUNCTION__, status);
+  return status;
 }
 
 QUEUE_DATA Front()
