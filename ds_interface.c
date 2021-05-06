@@ -1,6 +1,7 @@
 #include "ds_interface.h"
 #include "generated_data.h"
 #include "utils.h"
+#include "queue.h"
 #include <math.h>
 #include <string.h>
 
@@ -169,6 +170,10 @@ DSError DS_WriteInt(const DSID id, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    Enqueue(id);
+  }
   return status;
 }
 
@@ -204,6 +209,10 @@ DSError DS_WriteString(const DSID id, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    Enqueue(id);
+  }
   return status;
 }
 
@@ -348,6 +357,10 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    Enqueue(id);
+  }
   return status;
 }
 
@@ -435,6 +448,10 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    Enqueue(id);
+  }
   return status;
 }
 

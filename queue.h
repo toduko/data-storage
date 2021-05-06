@@ -2,8 +2,9 @@
 #define QUEUE_H_
 
 #include "types.h"
+#include "generated_ids.h"
 
-typedef int QUEUE_DATA;
+typedef DSID QUEUE_DATA;
 
 int Is_Empty();
 
@@ -14,5 +15,7 @@ DSError Enqueue(QUEUE_DATA data);
 DSError Dequeue();
 
 QUEUE_DATA Front();
+
+void Print_Elements();
 
 #endif

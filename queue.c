@@ -77,6 +77,22 @@ QUEUE_DATA Front()
   {
     result = queue[front];
   }
+  else
+  {
+    result = -1;
+  }
 
   return result;
+}
+
+void Print_Elements()
+{
+  if (!Is_Empty())
+  {
+    U8 i;
+    for (i = front; i < rear; ++i)
+    {
+      printf("%d\n", queue[i % QUEUE_SIZE]);
+    }
+  }
 }
