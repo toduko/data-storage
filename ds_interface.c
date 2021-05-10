@@ -6,6 +6,7 @@
 #include <string.h>
 
 Language language = ENGLISH;
+DSID subscribers[DC_ID_MAX];
 
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
@@ -59,6 +60,10 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    subscribers[id] = 1;
+  }
   return status;
 }
 
@@ -118,6 +123,10 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    subscribers[id] = 1;
+  }
   return status;
 }
 
@@ -170,7 +179,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
-  if (status == SUCCESS)
+  if (status == SUCCESS && subscribers[id] == 1)
   {
     Enqueue(id);
   }
@@ -209,7 +218,7 @@ DSError DS_WriteString(const DSID id, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
-  if (status == SUCCESS)
+  if (status == SUCCESS && subscribers[id] == 1)
   {
     Enqueue(id);
   }
@@ -282,6 +291,10 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    subscribers[id] = 1;
+  }
   return status;
 }
 
@@ -357,7 +370,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
-  if (status == SUCCESS)
+  if (status == SUCCESS && subscribers[id] == 1)
   {
     Enqueue(id);
   }
@@ -404,6 +417,10 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    subscribers[id] = 1;
+  }
   return status;
 }
 
@@ -448,7 +465,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
-  if (status == SUCCESS)
+  if (status == SUCCESS && subscribers[id] == 1)
   {
     Enqueue(id);
   }
