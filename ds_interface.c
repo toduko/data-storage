@@ -6,7 +6,7 @@
 #include <string.h>
 
 Language language = ENGLISH;
-DSID subscribers[DC_ID_MAX / 8 + (DC_ID_MAX % 8 != 0)];
+static U8 subscribers[(DC_ID_MAX + 7) / 8] = {0};
 
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
