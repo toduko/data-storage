@@ -9,6 +9,11 @@
 #define YELLOW "\x1b[33m"
 #define RESET "\x1b[0m"
 
+/* Return Data.Y value */
+#define BitVal(data, y) ((data >> y) & 1)
+/* Set Data.Y to 1 */
+#define SetBit(data, y) data |= (1 << y)
+
 void Log_Result(const char *name, const DSError status);
 
 S8 S32_To_S8(S32 value);
