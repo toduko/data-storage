@@ -150,7 +150,14 @@ DSError DS_WriteInt(const DSID id, const S32 value)
       if (element.type == TYPE_S32)
       {
         S32 *ptr = (S32 *)element.data;
-        *ptr = value;
+        if (value != *ptr)
+        {
+          *ptr = value;
+        }
+        else
+        {
+          status = SAME_VALUE;
+        }
       }
       if (element.type == TYPE_S16)
       {
@@ -161,7 +168,15 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S16 *ptr = (S16 *)element.data;
-          *ptr = S32_To_S16(value);
+          S16 val_to_write = S32_To_S16(value);
+          if (val_to_write != *ptr)
+          {
+            *ptr = val_to_write;
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
       if (element.type == TYPE_S8)
@@ -173,7 +188,15 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S8 *ptr = (S8 *)element.data;
-          *ptr = S32_To_S8(value);
+          S8 val_to_write = S32_To_S8(value);
+          if (val_to_write != *ptr)
+          {
+            *ptr = val_to_write;
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
     }
@@ -213,7 +236,14 @@ DSError DS_WriteString(const DSID id, char *string)
         {
           status = BUFFER_TOO_BIG;
         }
-        snprintf(ptr->str, ptr->size, "%s", string);
+        if (memcmp(string, ptr->str, ptr->size) != 0)
+        {
+          snprintf(ptr->str, ptr->size, "%s", string);
+        }
+        else
+        {
+          status = SAME_VALUE;
+        }
       }
     }
   }
@@ -324,7 +354,14 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
         }
         else
         {
-          data->values[position] = value;
+          if (value != data->values[position])
+          {
+            data->values[position] = value;
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
 
@@ -343,7 +380,15 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            data->values[position] = S32_To_S16(value);
+            S16 val_to_write = S32_To_S16(value);
+            if (val_to_write != data->values[position])
+            {
+              data->values[position] = val_to_write;
+            }
+            else
+            {
+              status = SAME_VALUE;
+            }
           }
         }
       }
@@ -363,7 +408,15 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            data->values[position] = S32_To_S8(value);
+            S8 val_to_write = S32_To_S8(value);
+            if (val_to_write != data->values[position])
+            {
+              data->values[position] = val_to_write;
+            }
+            else
+            {
+              status = SAME_VALUE;
+            }
           }
         }
       }
@@ -459,7 +512,14 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
           {
             status = BUFFER_TOO_BIG;
           }
-          snprintf(ptr, data->max_str_size, "%s", string);
+          if (memcmp(string, ptr, data->max_str_size) != 0)
+          {
+            snprintf(ptr, data->max_str_size, "%s", string);
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
     }

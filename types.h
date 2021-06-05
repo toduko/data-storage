@@ -44,6 +44,7 @@ typedef uint8_t U8;
 typedef enum
 {
   SUCCESS,
+  SAME_VALUE,
   OUT_OF_BOUNDS,
   BUFFER_TOO_SMALL,
   BUFFER_TOO_BIG,

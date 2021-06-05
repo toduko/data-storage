@@ -13,6 +13,10 @@ void Log_Result(const char *name, const DSError status)
     color = GREEN;
     result = "SUCCESS";
     break;
+  case SAME_VALUE:
+    color = YELLOW;
+    result = "SAME_VALUE";
+    break;
   case OUT_OF_BOUNDS:
     color = YELLOW;
     result = "OUT_OF_BOUNDS";
