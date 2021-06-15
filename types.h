@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <math.h>
+#include "generated_ids.h"
 
 typedef int32_t S32;
 #define S32_SIZE sizeof(S32)
@@ -63,6 +64,7 @@ typedef struct
     void *data;
     const void *const_data;
   };
+  U8 relations[(DC_ID_MAX + 7) / 8];
 } DS_DATA;
 
 typedef struct

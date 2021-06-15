@@ -133,13 +133,15 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
 DSError DS_WriteInt(const DSID id, const S32 value)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
+
   if (id >= DC_ID_MAX)
   {
     status = OUT_OF_BOUNDS;
   }
   else
   {
-    DS_DATA element = Get_Element_By_Id(id);
+    element = Get_Element_By_Id(id);
 
     if (Is_Not_WritableInt(element))
     {
@@ -206,6 +208,14 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
   }
   return status;
 }
@@ -213,6 +223,8 @@ DSError DS_WriteInt(const DSID id, const S32 value)
 DSError DS_WriteString(const DSID id, char *string)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
+
   if (!string)
   {
     status = POINTER_ERROR;
@@ -225,7 +237,7 @@ DSError DS_WriteString(const DSID id, char *string)
     }
     else
     {
-      DS_DATA element = Get_Element_By_Id(id);
+      element = Get_Element_By_Id(id);
       if (Is_Not_WritableString(element))
       {
         status = TYPE_ERROR;
@@ -253,6 +265,14 @@ DSError DS_WriteString(const DSID id, char *string)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
   }
   return status;
 }
@@ -333,6 +353,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
 DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
 
   if (id >= DC_ID_MAX)
   {
@@ -340,7 +361,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   }
   else
   {
-    DS_DATA element = Get_Element_By_Id(id);
+    element = Get_Element_By_Id(id);
     if (Is_Not_IntList(element))
     {
       status = TYPE_ERROR;
@@ -429,6 +450,14 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
   }
   return status;
 }
@@ -483,6 +512,8 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
 DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
+
   if (!string)
   {
     status = POINTER_ERROR;
@@ -495,7 +526,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     }
     else
     {
-      DS_DATA element = Get_Element_By_Id(id);
+      element = Get_Element_By_Id(id);
 
       if (Is_Not_StringList(element))
       {
@@ -532,6 +563,14 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
   }
   return status;
 }
