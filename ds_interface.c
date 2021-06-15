@@ -1,10 +1,12 @@
 #include "ds_interface.h"
 #include "generated_data.h"
 #include "utils.h"
+#include "queue.h"
 #include <math.h>
 #include <string.h>
 
 Language language = ENGLISH;
+static U8 subscribers[(DC_ID_MAX + 7) / 8] = {0};
 
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
@@ -58,6 +60,10 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    SetBit(subscribers[id / 8], id % 8);
+  }
   return status;
 }
 
@@ -117,19 +123,25 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    SetBit(subscribers[id / 8], id % 8);
+  }
   return status;
 }
 
 DSError DS_WriteInt(const DSID id, const S32 value)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
+
   if (id >= DC_ID_MAX)
   {
     status = OUT_OF_BOUNDS;
   }
   else
   {
-    DS_DATA element = Get_Element_By_Id(id);
+    element = Get_Element_By_Id(id);
 
     if (Is_Not_WritableInt(element))
     {
@@ -140,7 +152,14 @@ DSError DS_WriteInt(const DSID id, const S32 value)
       if (element.type == TYPE_S32)
       {
         S32 *ptr = (S32 *)element.data;
-        *ptr = value;
+        if (value != *ptr)
+        {
+          *ptr = value;
+        }
+        else
+        {
+          status = SAME_VALUE;
+        }
       }
       if (element.type == TYPE_S16)
       {
@@ -151,7 +170,15 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S16 *ptr = (S16 *)element.data;
-          *ptr = S32_To_S16(value);
+          S16 val_to_write = S32_To_S16(value);
+          if (val_to_write != *ptr)
+          {
+            *ptr = val_to_write;
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
       if (element.type == TYPE_S8)
@@ -163,18 +190,41 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S8 *ptr = (S8 *)element.data;
-          *ptr = S32_To_S8(value);
+          S8 val_to_write = S32_To_S8(value);
+          if (val_to_write != *ptr)
+          {
+            *ptr = val_to_write;
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
+  {
+    Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
+  }
   return status;
 }
 
 DSError DS_WriteString(const DSID id, char *string)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
+
   if (!string)
   {
     status = POINTER_ERROR;
@@ -187,7 +237,7 @@ DSError DS_WriteString(const DSID id, char *string)
     }
     else
     {
-      DS_DATA element = Get_Element_By_Id(id);
+      element = Get_Element_By_Id(id);
       if (Is_Not_WritableString(element))
       {
         status = TYPE_ERROR;
@@ -199,11 +249,31 @@ DSError DS_WriteString(const DSID id, char *string)
         {
           status = BUFFER_TOO_BIG;
         }
-        snprintf(ptr->str, ptr->size, "%s", string);
+        if (memcmp(string, ptr->str, ptr->size) != 0)
+        {
+          snprintf(ptr->str, ptr->size, "%s", string);
+        }
+        else
+        {
+          status = SAME_VALUE;
+        }
       }
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
+  {
+    Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
+  }
   return status;
 }
 
@@ -273,12 +343,17 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    SetBit(subscribers[id / 8], id % 8);
+  }
   return status;
 }
 
 DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
 
   if (id >= DC_ID_MAX)
   {
@@ -286,7 +361,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   }
   else
   {
-    DS_DATA element = Get_Element_By_Id(id);
+    element = Get_Element_By_Id(id);
     if (Is_Not_IntList(element))
     {
       status = TYPE_ERROR;
@@ -302,7 +377,14 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
         }
         else
         {
-          data->values[position] = value;
+          if (value != data->values[position])
+          {
+            data->values[position] = value;
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
 
@@ -321,7 +403,15 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            data->values[position] = S32_To_S16(value);
+            S16 val_to_write = S32_To_S16(value);
+            if (val_to_write != data->values[position])
+            {
+              data->values[position] = val_to_write;
+            }
+            else
+            {
+              status = SAME_VALUE;
+            }
           }
         }
       }
@@ -341,13 +431,34 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            data->values[position] = S32_To_S8(value);
+            S8 val_to_write = S32_To_S8(value);
+            if (val_to_write != data->values[position])
+            {
+              data->values[position] = val_to_write;
+            }
+            else
+            {
+              status = SAME_VALUE;
+            }
           }
         }
       }
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
+  {
+    Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
+  }
   return status;
 }
 
@@ -391,12 +502,18 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS)
+  {
+    SetBit(subscribers[id / 8], id % 8);
+  }
   return status;
 }
 
 DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
 {
   DSError status = SUCCESS;
+  DS_DATA element;
+
   if (!string)
   {
     status = POINTER_ERROR;
@@ -409,7 +526,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     }
     else
     {
-      DS_DATA element = Get_Element_By_Id(id);
+      element = Get_Element_By_Id(id);
 
       if (Is_Not_StringList(element))
       {
@@ -429,12 +546,32 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
           {
             status = BUFFER_TOO_BIG;
           }
-          snprintf(ptr, data->max_str_size, "%s", string);
+          if (memcmp(string, ptr, data->max_str_size) != 0)
+          {
+            snprintf(ptr, data->max_str_size, "%s", string);
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
     }
   }
   Log_Result(__FUNCTION__, status);
+  if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
+  {
+    Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
+    DSID i;
+    for (i = 0; i < DC_ID_MAX; ++i)
+    {
+      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      {
+        Enqueue(i);
+      }
+    }
+  }
   return status;
 }
 

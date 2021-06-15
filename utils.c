@@ -13,6 +13,10 @@ void Log_Result(const char *name, const DSError status)
     color = GREEN;
     result = "SUCCESS";
     break;
+  case SAME_VALUE:
+    color = YELLOW;
+    result = "SAME_VALUE";
+    break;
   case OUT_OF_BOUNDS:
     color = YELLOW;
     result = "OUT_OF_BOUNDS";
@@ -36,6 +40,14 @@ void Log_Result(const char *name, const DSError status)
   case INT_VALUE_OVERFLOW:
     color = RED;
     result = "INT_VALUE_OVERFLOW";
+    break;
+  case QUEUE_EMPTY:
+    color = RED;
+    result = "QUEUE_EMPTY";
+    break;
+  case QUEUE_FULL:
+    color = RED;
+    result = "QUEUE_FULL";
     break;
   }
   printf("%s result: %s%s%s\n", name, color, result, RESET);

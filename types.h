@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <math.h>
+#include "generated_ids.h"
 
 typedef int32_t S32;
 #define S32_SIZE sizeof(S32)
@@ -44,12 +45,15 @@ typedef uint8_t U8;
 typedef enum
 {
   SUCCESS,
+  SAME_VALUE,
   OUT_OF_BOUNDS,
   BUFFER_TOO_SMALL,
   BUFFER_TOO_BIG,
   POINTER_ERROR,
   TYPE_ERROR,
-  INT_VALUE_OVERFLOW
+  INT_VALUE_OVERFLOW,
+  QUEUE_FULL,
+  QUEUE_EMPTY
 } DSError;
 
 typedef struct
@@ -60,6 +64,7 @@ typedef struct
     void *data;
     const void *const_data;
   };
+  U8 relations[(DC_ID_MAX + 7) / 8];
 } DS_DATA;
 
 typedef struct
