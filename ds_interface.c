@@ -205,6 +205,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
   }
   return status;
 }
@@ -251,6 +252,7 @@ DSError DS_WriteString(const DSID id, char *string)
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
   }
   return status;
 }
@@ -426,6 +428,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
   }
   return status;
 }
@@ -528,6 +531,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
+    ClearBit(subscribers[id / 8], id % 8);
   }
   return status;
 }

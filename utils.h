@@ -13,6 +13,8 @@
 #define BitVal(data, y) ((data >> y) & 1)
 /* Set Data.Y to 1 */
 #define SetBit(data, y) data |= (1 << y)
+/* Clear Data.Y to 0 */
+#define ClearBit(data, y) data &= ~(1 << y)
 
 void Log_Result(const char *name, const DSError status);
 
