@@ -98,6 +98,16 @@ typedef struct
   char *strings;
 } STRING_LIST;
 
+typedef struct
+{
+  union
+  {
+    int *members;
+    const int *const_members;
+  };
+  const U8 size;
+} Group;
+
 typedef enum
 {
   BULGARIAN,

@@ -204,19 +204,26 @@ DSError DS_WriteInt(const DSID id, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
+    int8_t group_id = Get_GroupID(id);
+    if (group_id > -1)
     {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      Group group = Get_Group(group_id);
+      U8 i;
+      for (i = 0; i < group.size; ++i)
       {
-        Enqueue(i);
+        if (group.members[i] > -1)
+        {
+          Enqueue(group.members[i]);
+        }
       }
     }
   }
+
   return status;
 }
 
@@ -261,19 +268,26 @@ DSError DS_WriteString(const DSID id, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
+    int8_t group_id = Get_GroupID(id);
+    if (group_id > -1)
     {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      Group group = Get_Group(group_id);
+      U8 i;
+      for (i = 0; i < group.size; ++i)
       {
-        Enqueue(i);
+        if (group.members[i] > -1)
+        {
+          Enqueue(group.members[i]);
+        }
       }
     }
   }
+
   return status;
 }
 
@@ -446,19 +460,26 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
+    int8_t group_id = Get_GroupID(id);
+    if (group_id > -1)
     {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      Group group = Get_Group(group_id);
+      U8 i;
+      for (i = 0; i < group.size; ++i)
       {
-        Enqueue(i);
+        if (group.members[i] > -1)
+        {
+          Enqueue(group.members[i]);
+        }
       }
     }
   }
+
   return status;
 }
 
@@ -559,19 +580,26 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
+    int8_t group_id = Get_GroupID(id);
+    if (group_id > -1)
     {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
+      Group group = Get_Group(group_id);
+      U8 i;
+      for (i = 0; i < group.size; ++i)
       {
-        Enqueue(i);
+        if (group.members[i] > -1 && group.members[i] != id)
+        {
+          Enqueue(group.members[i]);
+        }
       }
     }
   }
+
   return status;
 }
 
