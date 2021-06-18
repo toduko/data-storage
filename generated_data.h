@@ -6,8 +6,6 @@
 
 DS_DATA Get_Element_By_Id(DSID id);
 
-int8_t Get_GroupID(DSID id);
-
-Group Get_Group(U8 group_id);
+Relationship Get_Relationship(DSID id);
 
 #endif

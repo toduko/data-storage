@@ -64,7 +64,6 @@ typedef struct
     void *data;
     const void *const_data;
   };
-  U8 relations[(DC_ID_MAX + 7) / 8];
 } DS_DATA;
 
 typedef struct
@@ -100,13 +99,9 @@ typedef struct
 
 typedef struct
 {
-  union
-  {
-    int *members;
-    const int *const_members;
-  };
-  const U8 size;
-} Group;
+  DSID element;
+  DSID linkedElement;
+} Relationship;
 
 typedef enum
 {

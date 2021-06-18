@@ -209,18 +209,10 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    int8_t group_id = Get_GroupID(id);
-    if (group_id > -1)
+    Relationship relationship = Get_Relationship(id);
+    if (relationship.element != relationship.linkedElement)
     {
-      Group group = Get_Group(group_id);
-      U8 i;
-      for (i = 0; i < group.size; ++i)
-      {
-        if (group.members[i] > -1)
-        {
-          Enqueue(group.members[i]);
-        }
-      }
+      Enqueue(relationship.linkedElement);
     }
   }
 
@@ -273,18 +265,10 @@ DSError DS_WriteString(const DSID id, char *string)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    int8_t group_id = Get_GroupID(id);
-    if (group_id > -1)
+    Relationship relationship = Get_Relationship(id);
+    if (relationship.element != relationship.linkedElement)
     {
-      Group group = Get_Group(group_id);
-      U8 i;
-      for (i = 0; i < group.size; ++i)
-      {
-        if (group.members[i] > -1)
-        {
-          Enqueue(group.members[i]);
-        }
-      }
+      Enqueue(relationship.linkedElement);
     }
   }
 
@@ -465,18 +449,10 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    int8_t group_id = Get_GroupID(id);
-    if (group_id > -1)
+    Relationship relationship = Get_Relationship(id);
+    if (relationship.element != relationship.linkedElement)
     {
-      Group group = Get_Group(group_id);
-      U8 i;
-      for (i = 0; i < group.size; ++i)
-      {
-        if (group.members[i] > -1)
-        {
-          Enqueue(group.members[i]);
-        }
-      }
+      Enqueue(relationship.linkedElement);
     }
   }
 
@@ -585,18 +561,10 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    int8_t group_id = Get_GroupID(id);
-    if (group_id > -1)
+    Relationship relationship = Get_Relationship(id);
+    if (relationship.element != relationship.linkedElement)
     {
-      Group group = Get_Group(group_id);
-      U8 i;
-      for (i = 0; i < group.size; ++i)
-      {
-        if (group.members[i] > -1 && group.members[i] != id)
-        {
-          Enqueue(group.members[i]);
-        }
-      }
+      Enqueue(relationship.linkedElement);
     }
   }
 

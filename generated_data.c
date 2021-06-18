@@ -57,38 +57,26 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_STATIC_S16_MONO, .const_data = &TIRE_Data},
     {.type = TYPE_STATIC_STRING_MONO, .const_data = &STEERING_Data}};
 
-#define NUM_GROUPS 2
-
-int group1_members[] = {1, 2};
-int group2_members[] = {3, 4};
-
-Group groups[2] = {{.members = group1_members, .size = 2}, {.members = group2_members, .size = 2}};
+#define NUM_RELATIONS 2
+Relationship relationships[NUM_RELATIONS] = {
+    {.element = CLUTCH, .linkedElement = ENGINE},
+    {.element = BRAKE_PEDAL, .linkedElement = GEAR_BOX}};
 
 DS_DATA Get_Element_By_Id(DSID id)
 {
     return DS_GENERATED_DATA[id];
 }
 
-int8_t Get_GroupID(DSID id)
+Relationship Get_Relationship(DSID id)
 {
-    int8_t found_group = -1;
-    U8 group_idx;
-    for (group_idx = 0; group_idx < NUM_GROUPS; ++group_idx)
+    Relationship relationship;
+    U8 i;
+    for (i = 0; i < NUM_RELATIONS; ++i)
     {
-        U8 member_idx;
-        for (member_idx = 0; member_idx < groups[group_idx].size; ++member_idx)
+        if (relationships[i].element == id)
         {
-            if (groups[group_idx].members[member_idx] == id)
-            {
-                found_group = group_idx;
-            }
+            relationship = relationships[i];
         }
     }
-
-    return found_group;
-}
-
-Group Get_Group(U8 group_id)
-{
-    return groups[group_id];
+    return relationship;
 }
