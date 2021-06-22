@@ -57,6 +57,11 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_STATIC_S16_MONO, .const_data = &TIRE_Data},
     {.type = TYPE_STATIC_STRING_MONO, .const_data = &STEERING_Data}};
 
+#define NUM_CONST_RELATIONS 2
+const Relationship const_relationships[NUM_CONST_RELATIONS] = {
+    {.element = ENGINE, .linkedElement = WHEEL},
+    {.element = SUSPENSION, .linkedElement = SPEED}};
+
 #define NUM_RELATIONS 2
 Relationship relationships[NUM_RELATIONS] = {
     {.element = CLUTCH, .linkedElement = ENGINE},
@@ -71,6 +76,13 @@ Relationship Get_Relationship(DSID id)
 {
     Relationship relationship;
     U8 i;
+    for (i = 0; i < NUM_CONST_RELATIONS; ++i)
+    {
+        if (const_relationships[i].element == id)
+        {
+            relationship = const_relationships[i];
+        }
+    }
     for (i = 0; i < NUM_RELATIONS; ++i)
     {
         if (relationships[i].element == id)
