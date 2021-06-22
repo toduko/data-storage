@@ -6,6 +6,6 @@
 
 DS_DATA Get_Element_By_Id(DSID id);
 
-Relationship Get_Relationship(DSID id);
+void Notify_Relations(DSID id);
 
 #endif

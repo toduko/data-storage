@@ -1,4 +1,5 @@
 #include "generated_data.h"
+#include "queue.h"
 
 /*
 ** INTEGERS
@@ -63,32 +64,28 @@ const Relationship const_relationships[NUM_CONST_RELATIONS] = {
     {.element = SUSPENSION, .linkedElement = SPEED}};
 
 #define NUM_RELATIONS 2
-Relationship relationships[NUM_RELATIONS] = {
-    {.element = CLUTCH, .linkedElement = ENGINE},
-    {.element = BRAKE_PEDAL, .linkedElement = GEAR_BOX}};
+Relationship relationships[NUM_RELATIONS];
 
 DS_DATA Get_Element_By_Id(DSID id)
 {
     return DS_GENERATED_DATA[id];
 }
 
-Relationship Get_Relationship(DSID id)
+void Notify_Relations(DSID id)
 {
-    Relationship relationship;
     U8 i;
     for (i = 0; i < NUM_CONST_RELATIONS; ++i)
     {
         if (const_relationships[i].element == id)
         {
-            relationship = const_relationships[i];
+            Enqueue(const_relationships[i].linkedElement);
         }
     }
     for (i = 0; i < NUM_RELATIONS; ++i)
     {
-        if (relationships[i].element == id)
+        if (relationships[i].element == id && relationships[i].element != relationships[i].linkedElement)
         {
-            relationship = relationships[i];
+            Enqueue(relationships[i].linkedElement);
         }
     }
-    return relationship;
 }

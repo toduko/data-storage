@@ -209,11 +209,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    Relationship relationship = Get_Relationship(id);
-    if (relationship.element != relationship.linkedElement)
-    {
-      Enqueue(relationship.linkedElement);
-    }
+    Notify_Relations(id);
   }
 
   return status;
@@ -265,11 +261,7 @@ DSError DS_WriteString(const DSID id, char *string)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    Relationship relationship = Get_Relationship(id);
-    if (relationship.element != relationship.linkedElement)
-    {
-      Enqueue(relationship.linkedElement);
-    }
+    Notify_Relations(id);
   }
 
   return status;
@@ -449,11 +441,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    Relationship relationship = Get_Relationship(id);
-    if (relationship.element != relationship.linkedElement)
-    {
-      Enqueue(relationship.linkedElement);
-    }
+    Notify_Relations(id);
   }
 
   return status;
@@ -561,11 +549,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    Relationship relationship = Get_Relationship(id);
-    if (relationship.element != relationship.linkedElement)
-    {
-      Enqueue(relationship.linkedElement);
-    }
+    Notify_Relations(id);
   }
 
   return status;
