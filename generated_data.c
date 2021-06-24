@@ -78,6 +78,7 @@ void Notify_Relations(DSID id)
         if (const_relationships[i].element == id)
         {
             Enqueue(const_relationships[i].linkedElement);
+            Notify_Relations(const_relationships[i].linkedElement);
         }
     }
     for (i = 0; i < NUM_RELATIONS; ++i)
@@ -85,6 +86,7 @@ void Notify_Relations(DSID id)
         if (relationships[i].element == id && relationships[i].element != relationships[i].linkedElement)
         {
             Enqueue(relationships[i].linkedElement);
+            Notify_Relations(const_relationships[i].linkedElement);
         }
     }
 }

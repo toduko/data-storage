@@ -569,6 +569,7 @@ void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
     {
       relationships[i].element = updatedOne;
       relationships[i].linkedElement = notifiedOne;
+      break;
     }
   }
 }
