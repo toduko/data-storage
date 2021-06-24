@@ -563,15 +563,17 @@ void DS_SetLanguage(Language NewLang)
 void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
 {
   U8 i;
+
   for (i = 0; i < NUM_RELATIONS; ++i)
   {
-    if (relationships[i].element == relationships[i].linkedElement)
+    if (dynamic_relationships[i].element == dynamic_relationships[i].linkedElement)
     {
-      relationships[i].element = updatedOne;
-      relationships[i].linkedElement = notifiedOne;
+      dynamic_relationships[i].element = updatedOne;
+      dynamic_relationships[i].linkedElement = notifiedOne;
       break;
     }
   }
+  sort_relations(dynamic_relationships, 0, NUM_RELATIONS - 1);
 }
 
 void DS_RemoveNotification(DSID updatedOne)
@@ -579,9 +581,11 @@ void DS_RemoveNotification(DSID updatedOne)
   U8 i;
   for (i = 0; i < NUM_RELATIONS; ++i)
   {
-    if (relationships[i].element == updatedOne)
+    if (dynamic_relationships[i].element == updatedOne)
     {
-      relationships[i].linkedElement = relationships[i].element;
+      dynamic_relationships[i].linkedElement = dynamic_relationships[i].element;
     }
   }
+
+  sort_relations(dynamic_relationships, 0, NUM_RELATIONS - 1);
 }

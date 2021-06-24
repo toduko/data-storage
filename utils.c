@@ -120,3 +120,36 @@ S32 S16_To_S32(S16 value)
     return (S32)value << 0;
   }
 }
+
+void sort_relations(Relationship relationships[], int first, int last)
+{
+  int i, j, pivot;
+  Relationship temp;
+
+  if (first < last)
+  {
+    pivot = first;
+    i = first;
+    j = last;
+
+    while (i < j)
+    {
+      while (relationships[i].element <= relationships[pivot].element && i < last)
+        i++;
+      while (relationships[j].element > relationships[pivot].element)
+        j--;
+      if (i < j)
+      {
+        temp = relationships[i];
+        relationships[i] = relationships[j];
+        relationships[j] = temp;
+      }
+    }
+
+    temp = relationships[pivot];
+    relationships[pivot] = relationships[j];
+    relationships[j] = temp;
+    sort_relations(relationships, first, j - 1);
+    sort_relations(relationships, j + 1, last);
+  }
+}

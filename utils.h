@@ -26,4 +26,6 @@ S16 S32_To_S16(S32 value);
 
 S32 S16_To_S32(S16 value);
 
+void sort_relations(Relationship relationships[], int first, int last);
+
 #endif

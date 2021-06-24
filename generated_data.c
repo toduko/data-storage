@@ -63,7 +63,7 @@ const Relationship const_relationships[NUM_CONST_RELATIONS] = {
     {.element = ENGINE, .linkedElement = WHEEL},
     {.element = SUSPENSION, .linkedElement = SPEED}};
 
-Relationship relationships[NUM_RELATIONS];
+Relationship dynamic_relationships[NUM_RELATIONS];
 
 DS_DATA Get_Element_By_Id(DSID id)
 {
@@ -72,21 +72,107 @@ DS_DATA Get_Element_By_Id(DSID id)
 
 void Notify_Relations(DSID id)
 {
-    U8 i;
-    for (i = 0; i < NUM_CONST_RELATIONS; ++i)
+    int lo = 0,
+        hi = NUM_CONST_RELATIONS;
+    while (lo < hi)
     {
-        if (const_relationships[i].element == id)
+        int mid = (lo + hi) / 2;
+
+        if (const_relationships[mid].element < id)
         {
-            Enqueue(const_relationships[i].linkedElement);
-            Notify_Relations(const_relationships[i].linkedElement);
+            hi = mid;
+        }
+
+        if (const_relationships[mid].element > id)
+        {
+            lo = mid + 1;
+        }
+
+        if (const_relationships[mid].element == id)
+        {
+            Enqueue(const_relationships[mid].linkedElement);
+            Notify_Relations(const_relationships[mid].linkedElement);
+
+            /* Search right for elements with the same DSID */
+            int i;
+            for (i = mid; i < hi; ++i)
+            {
+                if (const_relationships[i].element == id)
+                {
+                    Enqueue(const_relationships[i].linkedElement);
+                    Notify_Relations(const_relationships[i].linkedElement);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            /* Search left for elements with the same DSID */
+            for (i = mid; i > lo; --i)
+            {
+                if (const_relationships[i].element == id)
+                {
+                    Enqueue(const_relationships[i].linkedElement);
+                    Notify_Relations(const_relationships[i].linkedElement);
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
     }
-    for (i = 0; i < NUM_RELATIONS; ++i)
+
+    lo = 0,
+    hi = NUM_RELATIONS;
+    while (lo < hi)
     {
-        if (relationships[i].element == id && relationships[i].element != relationships[i].linkedElement)
+        int mid = (lo + hi) / 2;
+
+        if (dynamic_relationships[mid].element < id)
         {
-            Enqueue(relationships[i].linkedElement);
-            Notify_Relations(const_relationships[i].linkedElement);
+            hi = mid;
+        }
+
+        if (dynamic_relationships[mid].element > id)
+        {
+            lo = mid + 1;
+        }
+
+        if (dynamic_relationships[mid].element == id && dynamic_relationships[mid].element != dynamic_relationships[mid].linkedElement)
+        {
+            Enqueue(dynamic_relationships[mid].linkedElement);
+            Notify_Relations(dynamic_relationships[mid].linkedElement);
+
+            /* Search right for elements with the same DSID */
+            int i;
+            for (i = mid; i < hi; ++i)
+            {
+                if (dynamic_relationships[i].element == id && dynamic_relationships[i].element != dynamic_relationships[i].linkedElement)
+                {
+                    Enqueue(dynamic_relationships[i].linkedElement);
+                    Notify_Relations(dynamic_relationships[i].linkedElement);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            /* Search left for elements with the same DSID */
+            for (i = mid; i > lo; --i)
+            {
+                if (dynamic_relationships[i].element == id && dynamic_relationships[i].element != dynamic_relationships[i].linkedElement)
+                {
+                    Enqueue(dynamic_relationships[i].linkedElement);
+                    Notify_Relations(dynamic_relationships[i].linkedElement);
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
     }
 }
