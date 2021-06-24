@@ -559,3 +559,28 @@ void DS_SetLanguage(Language NewLang)
 {
   language = NewLang;
 }
+
+void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
+{
+  U8 i;
+  for (i = 0; i < NUM_RELATIONS; ++i)
+  {
+    if (relationships[i].element == relationships[i].linkedElement)
+    {
+      relationships[i].element = updatedOne;
+      relationships[i].linkedElement = notifiedOne;
+    }
+  }
+}
+
+void DS_RemoveNotification(DSID updatedOne)
+{
+  U8 i;
+  for (i = 0; i < NUM_RELATIONS; ++i)
+  {
+    if (relationships[i].element == updatedOne)
+    {
+      relationships[i].linkedElement = relationships[i].element;
+    }
+  }
+}

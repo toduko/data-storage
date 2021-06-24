@@ -63,7 +63,6 @@ const Relationship const_relationships[NUM_CONST_RELATIONS] = {
     {.element = ENGINE, .linkedElement = WHEEL},
     {.element = SUSPENSION, .linkedElement = SPEED}};
 
-#define NUM_RELATIONS 2
 Relationship relationships[NUM_RELATIONS];
 
 DS_DATA Get_Element_By_Id(DSID id)
