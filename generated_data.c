@@ -1,4 +1,5 @@
 #include "generated_data.h"
+#include "utils.h"
 #include "queue.h"
 
 /*
@@ -72,105 +73,74 @@ DS_DATA Get_Element_By_Id(DSID id)
 
 void Notify_Relations(DSID id)
 {
-    int lo = 0,
-        hi = NUM_CONST_RELATIONS;
-    while (lo < hi)
+    int idx = binary_search(const_relationships, NUM_CONST_RELATIONS, id);
+
+    if (idx != -1)
     {
-        int mid = (lo + hi) / 2;
-
-        if (const_relationships[mid].element < id)
+        if (const_relationships[idx].element != const_relationships[idx].linkedElement)
         {
-            hi = mid;
+            Enqueue(const_relationships[idx].linkedElement);
+            Notify_Relations(const_relationships[idx].linkedElement);
         }
 
-        if (const_relationships[mid].element > id)
-        {
-            lo = mid + 1;
-        }
+        int left = idx, right = idx;
 
-        if (const_relationships[mid].element == id)
+        while (left - 1 >= 0)
         {
-            Enqueue(const_relationships[mid].linkedElement);
-            Notify_Relations(const_relationships[mid].linkedElement);
-
-            /* Search right for elements with the same DSID */
-            int i;
-            for (i = mid; i < hi; ++i)
+            if (const_relationships[--left].element == id)
             {
-                if (const_relationships[i].element == id)
+                if (const_relationships[left].element != const_relationships[left].linkedElement)
                 {
-                    Enqueue(const_relationships[i].linkedElement);
-                    Notify_Relations(const_relationships[i].linkedElement);
-                }
-                else
-                {
-                    break;
+                    Enqueue(const_relationships[left].linkedElement);
+                    Notify_Relations(const_relationships[left].linkedElement);
                 }
             }
+        }
 
-            /* Search left for elements with the same DSID */
-            for (i = mid; i > lo; --i)
+        while (right + 1 < NUM_CONST_RELATIONS)
+        {
+            if (const_relationships[++right].element == id)
             {
-                if (const_relationships[i].element == id)
+                if (const_relationships[right].element != const_relationships[right].linkedElement)
                 {
-                    Enqueue(const_relationships[i].linkedElement);
-                    Notify_Relations(const_relationships[i].linkedElement);
-                }
-                else
-                {
-                    break;
+                    Enqueue(const_relationships[right].linkedElement);
+                    Notify_Relations(const_relationships[right].linkedElement);
                 }
             }
         }
     }
 
-    lo = 0,
-    hi = NUM_RELATIONS;
-    while (lo < hi)
+    idx = binary_search(dynamic_relationships, NUM_RELATIONS, id);
+    if (idx != -1)
     {
-        int mid = (lo + hi) / 2;
-
-        if (dynamic_relationships[mid].element < id)
+        if (dynamic_relationships[idx].element != dynamic_relationships[idx].linkedElement)
         {
-            hi = mid;
+            Enqueue(dynamic_relationships[idx].linkedElement);
+            Notify_Relations(dynamic_relationships[idx].linkedElement);
         }
 
-        if (dynamic_relationships[mid].element > id)
-        {
-            lo = mid + 1;
-        }
+        int left = idx, right = idx;
 
-        if (dynamic_relationships[mid].element == id && dynamic_relationships[mid].element != dynamic_relationships[mid].linkedElement)
+        while (left - 1 >= 0)
         {
-            Enqueue(dynamic_relationships[mid].linkedElement);
-            Notify_Relations(dynamic_relationships[mid].linkedElement);
-
-            /* Search right for elements with the same DSID */
-            int i;
-            for (i = mid; i < hi; ++i)
+            if (dynamic_relationships[--left].element == id)
             {
-                if (dynamic_relationships[i].element == id && dynamic_relationships[i].element != dynamic_relationships[i].linkedElement)
+                if (dynamic_relationships[left].element != dynamic_relationships[left].linkedElement)
                 {
-                    Enqueue(dynamic_relationships[i].linkedElement);
-                    Notify_Relations(dynamic_relationships[i].linkedElement);
-                }
-                else
-                {
-                    break;
+                    Enqueue(dynamic_relationships[left].linkedElement);
+                    Notify_Relations(dynamic_relationships[left].linkedElement);
                 }
             }
+        }
 
-            /* Search left for elements with the same DSID */
-            for (i = mid; i > lo; --i)
+        while (right + 1 < NUM_RELATIONS)
+        {
+            if (dynamic_relationships[++right].element == id)
             {
-                if (dynamic_relationships[i].element == id && dynamic_relationships[i].element != dynamic_relationships[i].linkedElement)
+                if (dynamic_relationships[right].element != dynamic_relationships[right].linkedElement)
                 {
-                    Enqueue(dynamic_relationships[i].linkedElement);
-                    Notify_Relations(dynamic_relationships[i].linkedElement);
-                }
-                else
-                {
-                    break;
+                    Enqueue(dynamic_relationships[right].linkedElement);
+                    Notify_Relations(dynamic_relationships[right].linkedElement);
                 }
             }
         }

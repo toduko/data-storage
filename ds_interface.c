@@ -562,7 +562,7 @@ void DS_SetLanguage(Language NewLang)
 
 void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
 {
-  U8 i;
+  int i;
 
   for (i = 0; i < NUM_RELATIONS; ++i)
   {
@@ -578,7 +578,7 @@ void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
 
 void DS_RemoveNotification(DSID updatedOne)
 {
-  U8 i;
+  int i;
   for (i = 0; i < NUM_RELATIONS; ++i)
   {
     if (dynamic_relationships[i].element == updatedOne)

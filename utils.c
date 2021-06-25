@@ -153,3 +153,28 @@ void sort_relations(Relationship relationships[], int first, int last)
     sort_relations(relationships, j + 1, last);
   }
 }
+
+int binary_search(Relationship relationships[], int size, DSID value)
+{
+  int low = 0, high = size - 1, result = -1;
+
+  while (low <= high)
+  {
+    int mid = (high - low) / 2 + low;
+    if (relationships[mid].element > value)
+    {
+      high = mid - 1;
+    }
+    else if (relationships[mid].element == value)
+    {
+      result = mid;
+      high = mid - 1;
+    }
+    else
+    {
+      low = mid + 1;
+    }
+  }
+  
+  return result;
+}
