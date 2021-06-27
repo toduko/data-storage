@@ -1,4 +1,6 @@
 #include "generated_data.h"
+#include "utils.h"
+#include "queue.h"
 
 /*
 ** INTEGERS
@@ -57,7 +59,90 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_STATIC_S16_MONO, .const_data = &TIRE_Data},
     {.type = TYPE_STATIC_STRING_MONO, .const_data = &STEERING_Data}};
 
+#define NUM_CONST_RELATIONS 2
+const Relationship const_relationships[NUM_CONST_RELATIONS] = {
+    {.element = ENGINE, .linkedElement = WHEEL},
+    {.element = SUSPENSION, .linkedElement = SPEED}};
+
+Relationship dynamic_relationships[NUM_RELATIONS];
+
 DS_DATA Get_Element_By_Id(DSID id)
 {
     return DS_GENERATED_DATA[id];
+}
+
+void Notify_Relations(DSID id)
+{
+    int idx = binary_search(const_relationships, NUM_CONST_RELATIONS, id);
+
+    if (idx != -1)
+    {
+        if (const_relationships[idx].element != const_relationships[idx].linkedElement)
+        {
+            Enqueue(const_relationships[idx].linkedElement);
+            Notify_Relations(const_relationships[idx].linkedElement);
+        }
+
+        int left = idx, right = idx;
+
+        while (left - 1 >= 0)
+        {
+            if (const_relationships[--left].element == id)
+            {
+                if (const_relationships[left].element != const_relationships[left].linkedElement)
+                {
+                    Enqueue(const_relationships[left].linkedElement);
+                    Notify_Relations(const_relationships[left].linkedElement);
+                }
+            }
+        }
+
+        while (right + 1 < NUM_CONST_RELATIONS)
+        {
+            if (const_relationships[++right].element == id)
+            {
+                if (const_relationships[right].element != const_relationships[right].linkedElement)
+                {
+                    Enqueue(const_relationships[right].linkedElement);
+                    Notify_Relations(const_relationships[right].linkedElement);
+                }
+            }
+        }
+    }
+
+    idx = binary_search(dynamic_relationships, NUM_RELATIONS, id);
+    if (idx != -1)
+    {
+        if (dynamic_relationships[idx].element != dynamic_relationships[idx].linkedElement)
+        {
+            Enqueue(dynamic_relationships[idx].linkedElement);
+            Notify_Relations(dynamic_relationships[idx].linkedElement);
+        }
+
+        int left = idx, right = idx;
+
+        while (left - 1 >= 0)
+        {
+            if (dynamic_relationships[--left].element == id)
+            {
+                if (dynamic_relationships[left].element != dynamic_relationships[left].linkedElement)
+                {
+                    Enqueue(dynamic_relationships[left].linkedElement);
+                    Notify_Relations(dynamic_relationships[left].linkedElement);
+                }
+            }
+        }
+
+        while (right + 1 < NUM_RELATIONS)
+        {
+            if (dynamic_relationships[++right].element == id)
+            {
+                if (dynamic_relationships[right].element != dynamic_relationships[right].linkedElement)
+                {
+                    Enqueue(dynamic_relationships[right].linkedElement);
+                    Notify_Relations(dynamic_relationships[right].linkedElement);
+                }
+            }
+        }
+    }
 }

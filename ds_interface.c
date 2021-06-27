@@ -204,19 +204,14 @@ DSError DS_WriteInt(const DSID id, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
-    {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
-      {
-        Enqueue(i);
-      }
-    }
+    Notify_Relations(id);
   }
+
   return status;
 }
 
@@ -261,19 +256,14 @@ DSError DS_WriteString(const DSID id, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
-    {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
-      {
-        Enqueue(i);
-      }
-    }
+    Notify_Relations(id);
   }
+
   return status;
 }
 
@@ -446,19 +436,14 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
-    {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
-      {
-        Enqueue(i);
-      }
-    }
+    Notify_Relations(id);
   }
+
   return status;
 }
 
@@ -559,23 +544,48 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     }
   }
   Log_Result(__FUNCTION__, status);
+
   if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
-    DSID i;
-    for (i = 0; i < DC_ID_MAX; ++i)
-    {
-      if (BitVal(element.relations[i / 8], i % 8) == 1)
-      {
-        Enqueue(i);
-      }
-    }
+    Notify_Relations(id);
   }
+
   return status;
 }
 
 void DS_SetLanguage(Language NewLang)
 {
   language = NewLang;
+}
+
+void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
+{
+  int i;
+
+  for (i = 0; i < NUM_RELATIONS; ++i)
+  {
+    if (dynamic_relationships[i].element == dynamic_relationships[i].linkedElement)
+    {
+      dynamic_relationships[i].element = updatedOne;
+      dynamic_relationships[i].linkedElement = notifiedOne;
+      break;
+    }
+  }
+  sort_relations(dynamic_relationships, 0, NUM_RELATIONS - 1);
+}
+
+void DS_RemoveNotification(DSID updatedOne)
+{
+  int i;
+  for (i = 0; i < NUM_RELATIONS; ++i)
+  {
+    if (dynamic_relationships[i].element == updatedOne)
+    {
+      dynamic_relationships[i].linkedElement = dynamic_relationships[i].element;
+    }
+  }
+
+  sort_relations(dynamic_relationships, 0, NUM_RELATIONS - 1);
 }

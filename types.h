@@ -64,7 +64,6 @@ typedef struct
     void *data;
     const void *const_data;
   };
-  U8 relations[(DC_ID_MAX + 7) / 8];
 } DS_DATA;
 
 typedef struct
@@ -97,6 +96,12 @@ typedef struct
   U8 max_str_size;
   char *strings;
 } STRING_LIST;
+
+typedef struct
+{
+  DSID element;
+  DSID linkedElement;
+} Relationship;
 
 typedef enum
 {

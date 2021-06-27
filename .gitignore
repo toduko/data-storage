@@ -53,3 +53,6 @@ dkms.conf
 
 # output directory
 bin/
+
+# .vscode directory
+.vscode/

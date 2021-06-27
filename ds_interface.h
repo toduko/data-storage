@@ -22,4 +22,8 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string);
 
 void DS_SetLanguage(Language NewLang);
 
+void DS_AddNotification(DSID updatedOne, DSID notifiedOne);
+
+void DS_RemoveNotification(DSID updatedOne);
+
 #endif
