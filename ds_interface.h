@@ -26,4 +26,8 @@ void DS_AddNotification(DSID updatedOne, DSID notifiedOne);
 
 void DS_RemoveNotification(DSID updatedOne);
 
+void DS_ExchangeNotification(DSID src, DSID dst);
+
+void DS_LinksUpdate(DSID id, const DSID *pDSList, const S32 listSize);
+
 #endif

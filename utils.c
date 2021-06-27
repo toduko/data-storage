@@ -154,7 +154,7 @@ void sort_relations(Relationship relationships[], int first, int last)
   }
 }
 
-int binary_search(Relationship relationships[], int size, DSID value)
+int binary_search_element(const Relationship relationships[], int size, DSID value)
 {
   int low = 0, high = size - 1, result = -1;
 

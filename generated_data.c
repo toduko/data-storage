@@ -59,10 +59,10 @@ DS_DATA DS_GENERATED_DATA[DC_ID_MAX] = {
     {.type = TYPE_STATIC_S16_MONO, .const_data = &TIRE_Data},
     {.type = TYPE_STATIC_STRING_MONO, .const_data = &STEERING_Data}};
 
-#define NUM_CONST_RELATIONS 2
 const Relationship const_relationships[NUM_CONST_RELATIONS] = {
     {.element = ENGINE, .linkedElement = WHEEL},
-    {.element = SUSPENSION, .linkedElement = SPEED}};
+    {.element = SUSPENSION, .linkedElement = SPEED},
+    {.element = TIRE, .linkedElement = CLUTCH}};
 
 Relationship dynamic_relationships[NUM_RELATIONS];
 
@@ -73,7 +73,7 @@ DS_DATA Get_Element_By_Id(DSID id)
 
 void Notify_Relations(DSID id)
 {
-    int idx = binary_search(const_relationships, NUM_CONST_RELATIONS, id);
+    int idx = binary_search_element(const_relationships, NUM_CONST_RELATIONS, id);
 
     if (idx != -1)
     {
@@ -95,6 +95,10 @@ void Notify_Relations(DSID id)
                     Notify_Relations(const_relationships[left].linkedElement);
                 }
             }
+            else
+            {
+                break;
+            }
         }
 
         while (right + 1 < NUM_CONST_RELATIONS)
@@ -107,10 +111,14 @@ void Notify_Relations(DSID id)
                     Notify_Relations(const_relationships[right].linkedElement);
                 }
             }
+            else
+            {
+                break;
+            }
         }
     }
 
-    idx = binary_search(dynamic_relationships, NUM_RELATIONS, id);
+    idx = binary_search_element(dynamic_relationships, NUM_RELATIONS, id);
     if (idx != -1)
     {
         if (dynamic_relationships[idx].element != dynamic_relationships[idx].linkedElement)
@@ -131,6 +139,10 @@ void Notify_Relations(DSID id)
                     Notify_Relations(dynamic_relationships[left].linkedElement);
                 }
             }
+            else
+            {
+                break;
+            }
         }
 
         while (right + 1 < NUM_RELATIONS)
@@ -142,6 +154,10 @@ void Notify_Relations(DSID id)
                     Enqueue(dynamic_relationships[right].linkedElement);
                     Notify_Relations(dynamic_relationships[right].linkedElement);
                 }
+            }
+            else
+            {
+                break;
             }
         }
     }

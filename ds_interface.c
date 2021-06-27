@@ -589,3 +589,28 @@ void DS_RemoveNotification(DSID updatedOne)
 
   sort_relations(dynamic_relationships, 0, NUM_RELATIONS - 1);
 }
+
+void DS_ExchangeNotification(DSID src, DSID dst)
+{
+  int i;
+  for (i = 0; i < NUM_RELATIONS; ++i)
+  {
+    if (dynamic_relationships[i].linkedElement == dst)
+    {
+      dynamic_relationships[i].linkedElement = dynamic_relationships[i].element;
+    }
+
+    if (dynamic_relationships[i].linkedElement == src && dynamic_relationships[i].element != dynamic_relationships[i].linkedElement)
+    {
+      DS_AddNotification(dynamic_relationships[i].element, dst);
+    }
+  }
+
+  for (i = 0; i < NUM_CONST_RELATIONS; ++i)
+  {
+    if (const_relationships[i].linkedElement == src && const_relationships[i].element != const_relationships[i].linkedElement)
+    {
+      DS_AddNotification(const_relationships[i].element, dst);
+    }
+  }
+}
