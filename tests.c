@@ -25,10 +25,10 @@ void Test_ReadWriteInt(void)
     for (i = 0; i < DC_ID_MAX; ++i)
     {
         DS_DATA element = Get_Element_By_Id(i);
-        S32 val_to_write = i * 10;
+        S32 val_to_write = i;
 
         status = DS_WriteInt(i, val_to_write);
-        if (Is_Not_WritableInt(element))
+        if (Is_Not_WritableInt(i))
         {
             TEST_CASE("Type error");
 
@@ -40,11 +40,12 @@ void Test_ReadWriteInt(void)
         {
             TEST_CASE("Success");
 
-            TEST_CHECK(status == SUCCESS);
+            TEST_CHECK(status == SUCCESS || status == SAME_VALUE);
             TEST_MSG("Expected: %d", SUCCESS);
             TEST_MSG("Produced: %d", status);
+            TEST_MSG("Id: %d", i);
 
-            if (element.type == TYPE_S16)
+            if (IS_S16(i))
             {
                 status = DS_WriteInt(i, S16_MAX + 1);
                 TEST_CHECK(status == INT_VALUE_OVERFLOW);
@@ -57,7 +58,7 @@ void Test_ReadWriteInt(void)
                 TEST_MSG("Produced: %d", status);
             }
 
-            if (element.type == TYPE_S8)
+            if (IS_S8(i))
             {
                 status = DS_WriteInt(i, S8_MAX + 1);
                 TEST_CHECK(status == INT_VALUE_OVERFLOW);
@@ -72,7 +73,7 @@ void Test_ReadWriteInt(void)
         }
 
         status = DS_ReadInt(i, &s32Data);
-        if (Is_Int(element))
+        if (Is_Int(i))
         {
             TEST_CASE("Success");
 
@@ -80,7 +81,7 @@ void Test_ReadWriteInt(void)
             TEST_MSG("Expected: %d", SUCCESS);
             TEST_MSG("Produced: %d", status);
 
-            if (Is_WritableInt(element))
+            if (Is_WritableInt(i))
             {
                 TEST_CHECK(s32Data == val_to_write);
                 TEST_MSG("Expected: %d", val_to_write);
@@ -122,7 +123,7 @@ void Test_ReadWriteString(void)
         sprintf(str_to_write, "%d", i * 10);
 
         status = DS_WriteString(i, str_to_write);
-        if (Is_WritableString(element))
+        if (Is_WritableString(i))
         {
             TEST_CASE("Success");
 
@@ -140,7 +141,7 @@ void Test_ReadWriteString(void)
         }
 
         status = DS_ReadString(i, str, sizeof(str));
-        if (Is_String(element))
+        if (Is_String(i))
         {
             TEST_CASE("Success");
 
@@ -148,7 +149,7 @@ void Test_ReadWriteString(void)
             TEST_MSG("Expected: %d", SUCCESS);
             TEST_MSG("Produced: %d", status);
 
-            if (Is_WritableString(element))
+            if (Is_WritableString(i))
             {
                 TEST_CHECK(strcmp(str, str_to_write) == 0);
                 TEST_MSG("Expected: %s", str_to_write);
@@ -187,7 +188,7 @@ void Test_ReadWriteIntList(void)
     {
         DS_DATA element = Get_Element_By_Id(i);
 
-        if (Is_Not_IntList(element))
+        if (Is_Not_IntList(i))
         {
             TEST_CASE("Type error");
             status = DS_WriteIntList(i, 0, 0);
@@ -203,7 +204,7 @@ void Test_ReadWriteIntList(void)
         else
         {
             TEST_CASE("Success");
-            if (element.type == TYPE_S32_LIST)
+            if (IS_S32_LIST(i))
             {
                 S32_LIST data = *(S32_LIST *)element.data;
                 char op[MAX_STR_SIZE];
@@ -238,7 +239,7 @@ void Test_ReadWriteIntList(void)
                 TEST_MSG("Expected: %d", OUT_OF_BOUNDS);
                 TEST_MSG("Produced: %d", status);
             }
-            if (element.type == TYPE_S16_LIST)
+            if (IS_S16_LIST(i))
             {
                 S16_LIST data = *(S16_LIST *)element.data;
                 U8 pos;
@@ -283,7 +284,7 @@ void Test_ReadWriteIntList(void)
                 TEST_MSG("Expected: %d", INT_VALUE_OVERFLOW);
                 TEST_MSG("Produced: %d", status);
             }
-            if (element.type == TYPE_S8_LIST)
+            if (IS_S8_LIST(i))
             {
                 S8_LIST data = *(S8_LIST *)element.data;
                 U8 pos;
@@ -353,7 +354,7 @@ void Test_ReadWriteStringList(void)
     {
         DS_DATA element = Get_Element_By_Id(i);
 
-        if (Is_StringList(element))
+        if (Is_StringList(i))
         {
             STRING_LIST data = *(STRING_LIST *)element.data;
             char str_to_write[] = "TEST";

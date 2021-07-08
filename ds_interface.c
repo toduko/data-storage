@@ -26,33 +26,33 @@ DSError DS_ReadInt(const DSID id, S32 *value)
     {
       DS_DATA element = Get_Element_By_Id(id);
 
-      if (Is_Not_Int(element))
+      if (Is_Not_Int(id))
       {
         status = TYPE_ERROR;
       }
       else
       {
-        if (element.type == TYPE_S32 || element.type == TYPE_STATIC_S32_MONO)
+        if (IS_S32(id) || IS_STATIC_S32_MONO(id))
         {
           *value = *((S32 *)element.data);
         }
-        if (element.type == TYPE_S16 || element.type == TYPE_STATIC_S16_MONO)
+        if (IS_S16(id) || IS_STATIC_S16_MONO(id))
         {
           *value = S16_To_S32(*(S16 *)element.data);
         }
-        if (element.type == TYPE_S8 || element.type == TYPE_STATIC_S8_MONO)
+        if (IS_S8(id) || IS_STATIC_S8_MONO(id))
         {
           *value = S8_To_S32(*(S8 *)element.data);
         }
-        if (element.type == TYPE_STATIC_S32)
+        if (IS_STATIC_S32(id))
         {
           *value = ((S32 *)element.data)[language];
         }
-        if (element.type == TYPE_STATIC_S16)
+        if (IS_STATIC_S16(id))
         {
           *value = S16_To_S32(((S16 *)element.data)[language]);
         }
-        if (element.type == TYPE_STATIC_S8)
+        if (IS_STATIC_S8(id))
         {
           *value = S8_To_S32(((S8 *)element.data)[language]);
         }
@@ -83,13 +83,13 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_String(element))
+      if (Is_Not_String(id))
       {
         status = TYPE_ERROR;
       }
       else
       {
-        if (Is_Not_StaticString(element))
+        if (Is_Not_StaticString(id))
         {
           String *ptr = (String *)element.data;
           if (BuffSize < ptr->size)
@@ -100,7 +100,7 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
         }
         else
         {
-          if (element.type == TYPE_STATIC_STRING)
+          if (IS_STATIC_STRING(id))
           {
             String *ptr = (String *)element.data;
             if (BuffSize < ptr[language].size)
@@ -143,13 +143,13 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     element = Get_Element_By_Id(id);
 
-    if (Is_Not_WritableInt(element))
+    if (Is_Not_WritableInt(id))
     {
       status = TYPE_ERROR;
     }
     else
     {
-      if (element.type == TYPE_S32)
+      if (IS_S32(id))
       {
         S32 *ptr = (S32 *)element.data;
         if (value != *ptr)
@@ -161,7 +161,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
           status = SAME_VALUE;
         }
       }
-      if (element.type == TYPE_S16)
+      if (IS_S16(id))
       {
         if (Is_Not_In_S16_Bounds(value))
         {
@@ -181,7 +181,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
           }
         }
       }
-      if (element.type == TYPE_S8)
+      if (IS_S8(id))
       {
         if (Is_Not_In_S8_Bounds(value))
         {
@@ -233,7 +233,7 @@ DSError DS_WriteString(const DSID id, char *string)
     else
     {
       element = Get_Element_By_Id(id);
-      if (Is_Not_WritableString(element))
+      if (Is_Not_WritableString(id))
       {
         status = TYPE_ERROR;
       }
@@ -283,13 +283,13 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_IntList(element))
+      if (Is_Not_IntList(id))
       {
         status = TYPE_ERROR;
       }
       else
       {
-        if (element.type == TYPE_S32_LIST)
+        if (IS_S32_LIST(id))
         {
           S32_LIST *data = element.data;
           if (position >= data->size)
@@ -302,7 +302,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
           }
         }
 
-        if (element.type == TYPE_S16_LIST)
+        if (IS_S16_LIST(id))
         {
           S16_LIST *data = element.data;
           S16 val = data->values[position];
@@ -316,7 +316,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
           }
         }
 
-        if (element.type == TYPE_S8_LIST)
+        if (IS_S8_LIST(id))
         {
           S8_LIST *data = element.data;
           S8 val = data->values[position];
@@ -352,13 +352,13 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   else
   {
     element = Get_Element_By_Id(id);
-    if (Is_Not_IntList(element))
+    if (Is_Not_IntList(id))
     {
       status = TYPE_ERROR;
     }
     else
     {
-      if (element.type == TYPE_S32_LIST)
+      if (IS_S32_LIST(id))
       {
         S32_LIST *data = element.data;
         if (position >= data->size)
@@ -378,7 +378,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
         }
       }
 
-      if (element.type == TYPE_S16_LIST)
+      if (IS_S16_LIST(id))
       {
         S16_LIST *data = element.data;
         if (position >= data->size)
@@ -406,7 +406,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
         }
       }
 
-      if (element.type == TYPE_S8_LIST)
+      if (IS_S8_LIST(id))
       {
         S8_LIST *data = element.data;
         if (position >= data->size)
@@ -463,7 +463,7 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_StringList(element))
+      if (Is_Not_StringList(id))
       {
         status = TYPE_ERROR;
       }
@@ -513,7 +513,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     {
       element = Get_Element_By_Id(id);
 
-      if (Is_Not_StringList(element))
+      if (Is_Not_StringList(id))
       {
         status = TYPE_ERROR;
       }
