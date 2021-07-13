@@ -66,6 +66,7 @@ typedef uint8_t U8;
 #define TYPE_STATIC_STRING 8
 #define TYPE_STATIC_STRING_MIN_ID 16
 #define TYPE_STATIC_STRING_MAX_ID 17
+//MKO: when using parameter in macro always use () around it! I.e. #define FUNCT(a,b) ((a)<(b))
 #define IS_STATIC_STRING(id) (id >= TYPE_STATIC_STRING_MIN_ID && id <= TYPE_STATIC_STRING_MAX_ID)
 
 #define TYPE_STATIC_S32 9
@@ -107,6 +108,7 @@ typedef uint8_t U8;
 
 typedef enum
 {
+    //MKO: it's good idea to initialize the first element of the enum with 0 (i.e SUCCESS = 0,)
   SUCCESS,
   SAME_VALUE,
   OUT_OF_BOUNDS,

@@ -111,18 +111,23 @@ S16 S32_To_S16(S32 value)
 
 S32 S16_To_S32(S16 value)
 {
+    //MKO: in general endian is not changing for a platform therefore this code ie executed each time unnecessary
+    // find a way to not execute it each time, but still provide an option to "tune" the code according endian
   if (Is_Big_Endian())
   {
     return (S32)value << 16;
   }
   else
   {
+      // MKO: do not use multiple exits (returns) in a single function. Code "<< 0" is useless and confusing.
     return (S32)value << 0;
   }
 }
 
+//MKO: never use int (you have predefined types)
 void sort_relations(Relationship relationships[], int first, int last)
 {
+    //MKO: never use int (you have predefined types)
   int i, j, pivot;
   Relationship temp;
 

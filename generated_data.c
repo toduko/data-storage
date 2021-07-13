@@ -127,7 +127,7 @@ DS_DATA Get_Element_By_Id(DSID id)
 {
     return DS_GENERATED_DATA[id];
 }
-
+//MKO: this function doed not belong to generated code!
 void Notify_Relations(DSID id)
 {
     int idx = binary_search_element(const_relationships, NUM_CONST_RELATIONS, id);
