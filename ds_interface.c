@@ -5,34 +5,120 @@
 #include <math.h>
 #include <string.h>
 
-//MKO: why this one is not static?
-Language language = ENGLISH;
+static Language language = ENGLISH;
 static U8 subscribers[(DC_ID_MAX + 7) / 8] = {0};
+
+void Notify_Relations(DSID id)
+{
+  int idx = binary_search_element(const_relationships, NUM_CONST_RELATIONS, id);
+
+  if (idx != -1)
+  {
+    if (const_relationships[idx].element != const_relationships[idx].linkedElement)
+    {
+      Enqueue(const_relationships[idx].linkedElement);
+      Notify_Relations(const_relationships[idx].linkedElement);
+    }
+
+    int left = idx, right = idx;
+
+    while (left - 1 >= 0)
+    {
+      if (const_relationships[--left].element == id)
+      {
+        if (const_relationships[left].element != const_relationships[left].linkedElement)
+        {
+          Enqueue(const_relationships[left].linkedElement);
+          Notify_Relations(const_relationships[left].linkedElement);
+        }
+      }
+      else
+      {
+        break;
+      }
+    }
+
+    while (right + 1 < NUM_CONST_RELATIONS)
+    {
+      if (const_relationships[++right].element == id)
+      {
+        if (const_relationships[right].element != const_relationships[right].linkedElement)
+        {
+          Enqueue(const_relationships[right].linkedElement);
+          Notify_Relations(const_relationships[right].linkedElement);
+        }
+      }
+      else
+      {
+        break;
+      }
+    }
+  }
+
+  idx = binary_search_element(dynamic_relationships, NUM_RELATIONS, id);
+  if (idx != -1)
+  {
+    if (dynamic_relationships[idx].element != dynamic_relationships[idx].linkedElement)
+    {
+      Enqueue(dynamic_relationships[idx].linkedElement);
+      Notify_Relations(dynamic_relationships[idx].linkedElement);
+    }
+
+    int left = idx, right = idx;
+
+    while (left - 1 >= 0)
+    {
+      if (dynamic_relationships[--left].element == id)
+      {
+        if (dynamic_relationships[left].element != dynamic_relationships[left].linkedElement)
+        {
+          Enqueue(dynamic_relationships[left].linkedElement);
+          Notify_Relations(dynamic_relationships[left].linkedElement);
+        }
+      }
+      else
+      {
+        break;
+      }
+    }
+
+    while (right + 1 < NUM_RELATIONS)
+    {
+      if (dynamic_relationships[++right].element == id)
+      {
+        if (dynamic_relationships[right].element != dynamic_relationships[right].linkedElement)
+        {
+          Enqueue(dynamic_relationships[right].linkedElement);
+          Notify_Relations(dynamic_relationships[right].linkedElement);
+        }
+      }
+      else
+      {
+        break;
+      }
+    }
+  }
+}
 
 DSError DS_ReadInt(const DSID id, S32 *value)
 {
   DSError status = SUCCESS;
-  //MKO: save here some lines of code (and improve readebility) by:
-  // DSError status = POINTER_ERROR;
-  // if (value != NULL)
-  //MKO: do not use (!value) as value is a pointer, it's beter to do for readebility (value != NULL) 
-  if (!value)
+
+  if (value == NULL)
   {
     status = POINTER_ERROR;
   }
   else
   {
-    
+
     if (id >= DC_ID_MAX)
     {
       status = OUT_OF_BOUNDS;
     }
     else
-    {        
+    {
       DS_DATA element = Get_Element_By_Id(id);
-        //MKO: in order to make difference between macros and functions it's good idea to use (for example) IS_NOT_INT
-        // also is very recommendet to not relay on negative logic in names, make the macro (function) IS_INT instead
-      if (Is_Not_Int(id))
+      if (!IS_INT(id))
       {
         status = TYPE_ERROR;
       }
@@ -42,25 +128,23 @@ DSError DS_ReadInt(const DSID id, S32 *value)
         {
           *value = *((S32 *)element.data);
         }
-        //MKO: in order to save time for check put here else 
-        if (IS_S16(id) || IS_STATIC_S16_MONO(id))
+        else if (IS_S16(id) || IS_STATIC_S16_MONO(id))
         {
           *value = S16_To_S32(*(S16 *)element.data);
         }
-        //MKO: else and here.. 
-        if (IS_S8(id) || IS_STATIC_S8_MONO(id))
+        else if (IS_S8(id) || IS_STATIC_S8_MONO(id))
         {
           *value = S8_To_S32(*(S8 *)element.data);
         }
-        if (IS_STATIC_S32(id))
+        else if (IS_STATIC_S32(id))
         {
           *value = ((S32 *)element.data)[language];
         }
-        if (IS_STATIC_S16(id))
+        else if (IS_STATIC_S16(id))
         {
           *value = S16_To_S32(((S16 *)element.data)[language]);
         }
-        if (IS_STATIC_S8(id))
+        else if (IS_STATIC_S8(id))
         {
           *value = S8_To_S32(((S8 *)element.data)[language]);
         }
@@ -74,11 +158,12 @@ DSError DS_ReadInt(const DSID id, S32 *value)
   }
   return status;
 }
-//MKO: never use char (you have predefined types)
+
+/* MKO: never use char (you have predefined types) */
 DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
 {
   DSError status = SUCCESS;
-  if (!buff)
+  if (buff == NULL)
   {
     status = POINTER_ERROR;
   }
@@ -91,43 +176,50 @@ DSError DS_ReadString(const DSID id, char *buff, const U32 BuffSize)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_String(id))
+      if (!IS_GENERAL_STRING(id))
       {
         status = TYPE_ERROR;
       }
       else
       {
-          
-        if (Is_Not_StaticString(id))
+
+        if (IS_STRING(id))
         {
-          String *ptr = (String *)element.data;
-          //MKO: here you check for an error, but still execute the code there is one?
+          const String *ptr = (String *)element.data;
           if (BuffSize < ptr->size)
           {
             status = BUFFER_TOO_SMALL;
-          }          
-          snprintf(buff, BuffSize, "%s", ptr->str);
+          }
+          else
+          {
+            memcpy(buff, ptr->str, BuffSize);
+          }
         }
         else
         {
           if (IS_STATIC_STRING(id))
           {
-              //MKO: as ptr is not changed it's good to be declered as const 
-            String *ptr = (String *)element.data;
+            const String *ptr = (String *)element.data;
             if (BuffSize < ptr[language].size)
             {
               status = BUFFER_TOO_SMALL;
             }
-            snprintf(buff, BuffSize, "%s", ptr[language].str);
+            else
+            {
+              memcpy(buff, ptr[language].str, BuffSize);
+            }
           }
-          else //MKO: is this code executed?? (check Is_Not_StaticString above )
+          else if (IS_STATIC_STRING_MONO(id))
           {
-            char *ptr = (char *)element.data;
+            const char *ptr = (char *)element.data;
             if (BuffSize < strlen(ptr))
             {
               status = BUFFER_TOO_SMALL;
             }
-            snprintf(buff, BuffSize, "%s", ptr);
+            else
+            {
+              memcpy(buff, ptr, BuffSize);
+            }
           }
         }
       }
@@ -154,7 +246,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
   {
     element = Get_Element_By_Id(id);
 
-    if (Is_Not_WritableInt(id))
+    if (!IS_WRITABLE_INT(id))
     {
       status = TYPE_ERROR;
     }
@@ -172,7 +264,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
           status = SAME_VALUE;
         }
       }
-      if (IS_S16(id))
+      else if (IS_S16(id))
       {
         if (Is_Not_In_S16_Bounds(value))
         {
@@ -181,7 +273,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S16 *ptr = (S16 *)element.data;
-          S16 val_to_write = S32_To_S16(value);
+          S16 val_to_write = value & 0xFFFF;
           if (val_to_write != *ptr)
           {
             *ptr = val_to_write;
@@ -192,7 +284,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
           }
         }
       }
-      if (IS_S8(id))
+      else if (IS_S8(id))
       {
         if (Is_Not_In_S8_Bounds(value))
         {
@@ -201,10 +293,7 @@ DSError DS_WriteInt(const DSID id, const S32 value)
         else
         {
           S8 *ptr = (S8 *)element.data;
-          //MKO: in general you should not care for endieness in case if you do bit operations as they are perforemd 
-          // on processor registers which are always BIG endian (some specific casess exist but we don't care)
-          // so here S8 val_to_write = value & 0xFF is OK.
-          S8 val_to_write = S32_To_S8(value);
+          S8 val_to_write = value & 0xFF;
           if (val_to_write != *ptr)
           {
             *ptr = val_to_write;
@@ -234,7 +323,7 @@ DSError DS_WriteString(const DSID id, char *string)
   DSError status = SUCCESS;
   DS_DATA element;
 
-  if (!string)
+  if (string == NULL)
   {
     status = POINTER_ERROR;
   }
@@ -247,7 +336,7 @@ DSError DS_WriteString(const DSID id, char *string)
     else
     {
       element = Get_Element_By_Id(id);
-      if (Is_Not_WritableString(id))
+      if (!IS_STRING(id))
       {
         status = TYPE_ERROR;
       }
@@ -258,23 +347,23 @@ DSError DS_WriteString(const DSID id, char *string)
         {
           status = BUFFER_TOO_BIG;
         }
-        //MKO: here we continue even if there was error before.
-        if (memcmp(string, ptr->str, ptr->size) != 0)
-        {
-            //MKO: why memcpy is not used? (for sure it will be faster)
-          snprintf(ptr->str, ptr->size, "%s", string);
-        }
         else
         {
-          status = SAME_VALUE;
+          if (memcmp(string, ptr->str, ptr->size) != 0)
+          {
+            memcpy(ptr->str, string, ptr->size);
+          }
+          else
+          {
+            status = SAME_VALUE;
+          }
         }
       }
     }
   }
-  //MKO: we'll not wat to use this log in production (release), therefore this code should exist only in debug
+  /* MKO: we'll not want to use this log in production (release), therefore this code should exist only in debug */
   Log_Result(__FUNCTION__, status);
-    //MKO: always put all operands in () i.e - if((a==b) && (c < d))
-  if (status == SUCCESS && BitVal(subscribers[id / 8], id % 8) == 1)
+  if ((status == SUCCESS) && (BitVal(subscribers[id / 8], id % 8) == 1))
   {
     Enqueue(id);
     ClearBit(subscribers[id / 8], id % 8);
@@ -287,7 +376,7 @@ DSError DS_WriteString(const DSID id, char *string)
 DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
 {
   DSError status = SUCCESS;
-  if (!value)
+  if (value == NULL)
   {
     status = POINTER_ERROR;
   }
@@ -300,7 +389,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_IntList(id))
+      if (!IS_INT_LIST(id))
       {
         status = TYPE_ERROR;
       }
@@ -318,8 +407,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
             *value = data->values[position];
           }
         }
-
-        if (IS_S16_LIST(id))
+        else if (IS_S16_LIST(id))
         {
           S16_LIST *data = element.data;
           S16 val = data->values[position];
@@ -332,8 +420,7 @@ DSError DS_ReadIntList(const DSID id, const U8 position, S32 *value)
             *value = S16_To_S32(val);
           }
         }
-
-        if (IS_S8_LIST(id))
+        else if (IS_S8_LIST(id))
         {
           S8_LIST *data = element.data;
           S8 val = data->values[position];
@@ -369,7 +456,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
   else
   {
     element = Get_Element_By_Id(id);
-    if (Is_Not_IntList(id))
+    if (!IS_INT_LIST(id))
     {
       status = TYPE_ERROR;
     }
@@ -394,8 +481,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
         }
       }
-
-      if (IS_S16_LIST(id))
+      else if (IS_S16_LIST(id))
       {
         S16_LIST *data = element.data;
         if (position >= data->size)
@@ -410,7 +496,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            S16 val_to_write = S32_To_S16(value);
+            S16 val_to_write = value & 0xFFFF;
             if (val_to_write != data->values[position])
             {
               data->values[position] = val_to_write;
@@ -422,8 +508,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
         }
       }
-
-      if (IS_S8_LIST(id))
+      else if (IS_S8_LIST(id))
       {
         S8_LIST *data = element.data;
         if (position >= data->size)
@@ -438,7 +523,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
           }
           else
           {
-            S8 val_to_write = S32_To_S8(value);
+            S8 val_to_write = value & 0xFF;
             if (val_to_write != data->values[position])
             {
               data->values[position] = val_to_write;
@@ -467,7 +552,7 @@ DSError DS_WriteIntList(const DSID id, const U8 position, const S32 value)
 DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U32 BuffSize)
 {
   DSError status = SUCCESS;
-  if (!buff)
+  if (buff == NULL)
   {
     status = POINTER_ERROR;
   }
@@ -480,7 +565,7 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
     else
     {
       DS_DATA element = Get_Element_By_Id(id);
-      if (Is_Not_StringList(id))
+      if (!IS_STRING_LIST(id))
       {
         status = TYPE_ERROR;
       }
@@ -493,12 +578,12 @@ DSError DS_ReadStringList(const DSID id, const U8 position, char *buff, const U3
         }
         else
         {
-          char *ptr = &data->strings[position * data->max_str_size];
+          const char *ptr = &data->strings[position * data->max_str_size];
           if (BuffSize < data->max_str_size)
           {
             status = BUFFER_TOO_SMALL;
           }
-          snprintf(buff, BuffSize, "%s", ptr);
+          memcpy(buff, ptr, BuffSize);
         }
       }
     }
@@ -516,7 +601,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
   DSError status = SUCCESS;
   DS_DATA element;
 
-  if (!string)
+  if (string == NULL)
   {
     status = POINTER_ERROR;
   }
@@ -530,7 +615,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
     {
       element = Get_Element_By_Id(id);
 
-      if (Is_Not_StringList(id))
+      if (!IS_STRING_LIST(id))
       {
         status = TYPE_ERROR;
       }
@@ -550,7 +635,7 @@ DSError DS_WriteStringList(const DSID id, const U8 position, char *string)
           }
           if (memcmp(string, ptr, data->max_str_size) != 0)
           {
-            snprintf(ptr, data->max_str_size, "%s", string);
+            memcpy(ptr, string, data->max_str_size);
           }
           else
           {
@@ -580,8 +665,7 @@ void DS_SetLanguage(Language NewLang)
 void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
 {
   int i;
-    //MKO: maybe it's good idea to keep somewhere a global counter of number of relations, and thus to avoid looping 
-    // each time to find the last element
+  /* TODO - add global counter of relationships */
   for (i = 0; i < NUM_RELATIONS; ++i)
   {
     if (dynamic_relationships[i].element == dynamic_relationships[i].linkedElement)
@@ -591,15 +675,16 @@ void DS_AddNotification(DSID updatedOne, DSID notifiedOne)
       break;
     }
   }
-  
-  //MKO: above we are loping thru all elements, why we are not looping only to the right one, add new one and just 
-  // move the others with one position (should be faster than looping thru all elements and then to sort them)
-  //MKO: above we already know the last elemet (i), why here we provide (NUM_RELATIONS - 1)?
-  //MKO: if we sort them and we provide (NUM_RELATIONS - 1), why we don't do just 
-  //   dynamic_relationships[i].element = updatedOne;
-  //   dynamic_relationships[i].linkedElement = notifiedOne;
-  // and then sort?
-  sort_relations(dynamic_relationships, 0, NUM_RELATIONS - 1);
+
+  for (i = 0; i < NUM_RELATIONS - 1; ++i)
+  {
+    if (dynamic_relationships[i].element > dynamic_relationships[i + 1].element)
+    {
+      Relationship temp = dynamic_relationships[i];
+      dynamic_relationships[i] = dynamic_relationships[i + 1];
+      dynamic_relationships[i + 1] = temp;
+    }
+  }
 }
 
 void DS_RemoveNotification(DSID updatedOne)
@@ -613,7 +698,15 @@ void DS_RemoveNotification(DSID updatedOne)
     }
   }
 
-  sort_relations(dynamic_relationships, 0, NUM_RELATIONS - 1);
+  for (i = 0; i < NUM_RELATIONS - 1; ++i)
+  {
+    if (dynamic_relationships[i].element > dynamic_relationships[i + 1].element)
+    {
+      Relationship temp = dynamic_relationships[i];
+      dynamic_relationships[i] = dynamic_relationships[i + 1];
+      dynamic_relationships[i + 1] = temp;
+    }
+  }
 }
 
 void DS_ExchangeNotification(DSID src, DSID dst)

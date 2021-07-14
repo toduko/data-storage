@@ -12,6 +12,6 @@ extern Relationship dynamic_relationships[NUM_RELATIONS];;
 
 DS_DATA Get_Element_By_Id(DSID id);
 
-void Notify_Relations(DSID id);
+
 
 #endif
